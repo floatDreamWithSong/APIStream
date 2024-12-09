@@ -16,7 +16,7 @@ class FaasTestApplicationTests {
         serviceArguments.add(new ServiceArgument("a",1));
         serviceArguments.add(new ServiceArgument("b",2));
         serviceArguments.add(new ServiceArgument("c",3));
-        ServiceFunction f = new ServiceFunction("test","var res = a+b+c;console.log(res);return 1;");
+        ServiceFunction f = new ServiceFunction("test","const res = a+b+c;console.log(res);return 1;");
         f.runService(serviceArguments);
     }
 
