@@ -15,7 +15,7 @@ public class JavaScriptRunTimeTest {
                 .out(new PrintStream(outputStream))
                 .build()) {
             // 定义JavaScript代码，包含console.log语句
-            String jsCode = "console.log('这是一个console.log消息');throw Error('what');";
+            String jsCode = "console.log('这是一个console.log消息');console.log('这是2个console.log消息');throw Error('what');";
             String jsFunction = "function add(a, b) { return a + b; }";
             context.eval("js", jsFunction);
             // 准备参数值
@@ -29,7 +29,7 @@ public class JavaScriptRunTimeTest {
             try{
                 context.eval(Source.create("js", jsCode));
             }catch (Exception e){
-                System.out.println(e.getMessage());
+                System.out.println("js error:"+e.getMessage());
             }
             // 获取捕获的console.log输出并打印
             System.out.println(outputStream.toString());
