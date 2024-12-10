@@ -2,10 +2,12 @@ package com.daydreamer.faastest.service;
 
 import com.daydreamer.faastest.entity.ServiceArgument;
 import com.daydreamer.faastest.entity.ServiceFunction;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Service
 public class FunctionService {
     private final HashMap<String, ServiceFunction> servicePool = new HashMap<>() ;
     public boolean isFunctionServicePathValid(String path) {

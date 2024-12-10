@@ -1,5 +1,5 @@
 package com.daydreamer.faastest.entity.dto.manage;
 
-public class ManageDeleteServiceEntity {
+public class DeleteFunctionServiceResponseEntity {
     public String message = "This is delete service";
 }
