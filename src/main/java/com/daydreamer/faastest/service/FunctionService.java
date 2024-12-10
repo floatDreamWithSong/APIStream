@@ -1,7 +1,9 @@
 package com.daydreamer.faastest.service;
 
+import com.daydreamer.faastest.entity.ServiceArgument;
 import com.daydreamer.faastest.entity.ServiceFunction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FunctionService {
@@ -9,8 +11,16 @@ public class FunctionService {
     public boolean isFunctionServicePathValid(String path) {
         return servicePool.containsKey(path);
     }
-    public ServiceFunction getFunctionService(String path) {
+    private ServiceFunction getFunctionService(String path) {
         return servicePool.get(path);
+    }
+    public Object useFunctionService(String path, ArrayList<ServiceArgument> arguments){
+        ServiceFunction serviceFunction = getFunctionService(path);
+        if(serviceFunction != null){
+            return serviceFunction.runService(arguments);
+        }
+        ServiceFunction testServiceFunction = new ServiceFunction("test","console.log(a,b);return `[a,b,${a+b}]`;");
+        return testServiceFunction.runService(arguments);
     }
     public void addFunctionService(String path, ServiceFunction function) {
         servicePool.put(path, function);
