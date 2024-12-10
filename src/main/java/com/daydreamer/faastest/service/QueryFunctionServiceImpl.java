@@ -1,6 +1,7 @@
 package com.daydreamer.faastest.service;
 
 import com.daydreamer.faastest.controller.QueryFunctionService;
+import com.daydreamer.faastest.entity.dto.manage.QueryFunctionDetailParamEntity;
 import com.daydreamer.faastest.entity.dto.manage.QueryFunctionDetailResponseEntity;
 import com.daydreamer.faastest.entity.dto.manage.QueryFunctionListResponseEntity;
 import com.daydreamer.faastest.entity.dto.manage.QueryFunctionListParamEntity;
@@ -14,7 +15,7 @@ public class QueryFunctionServiceImpl implements QueryFunctionService {
     }
 
     @Override
-    public QueryFunctionDetailResponseEntity queryFunctionDetail(QueryFunctionListParamEntity params) {
+    public QueryFunctionDetailResponseEntity queryFunctionDetail(QueryFunctionDetailParamEntity params) {
         return null;
     }
 }

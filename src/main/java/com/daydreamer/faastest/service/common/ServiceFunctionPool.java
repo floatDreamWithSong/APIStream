@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ServiceFunctionPool {
-    public static HashMap<String, ServiceFunction> serviceFunctionMap;
+    public static HashMap<String, ServiceFunction> serviceFunctionMap = new HashMap<>();
     public static boolean hasServiceFunctionOnPath(String path) {
         return serviceFunctionMap.containsKey(path);
     }

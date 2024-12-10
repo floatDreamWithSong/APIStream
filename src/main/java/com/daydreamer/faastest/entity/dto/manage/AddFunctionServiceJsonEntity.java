@@ -2,9 +2,11 @@ package com.daydreamer.faastest.entity.dto.manage;
 
 import com.daydreamer.faastest.entity.ServiceArgument;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 
+@NoArgsConstructor
 @AllArgsConstructor
 public class AddFunctionServiceJsonEntity {
     public String name;
