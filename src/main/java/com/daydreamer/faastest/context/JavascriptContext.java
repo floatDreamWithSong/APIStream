@@ -6,9 +6,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 public class JavascriptContext {
-    public static ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    public static Context context =Context.newBuilder("js")
-            .out(new PrintStream(JavascriptContext.outputStream))
+    public ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    public Context context =Context.newBuilder("js")
+            .out(new PrintStream(outputStream))
             .allowAllAccess(true)
             .build();
 }

@@ -1,6 +1,8 @@
 package com.daydreamer.faastest.entity.dto.manage;
 
-//@AllArgsConstructor
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class AddFunctionServiceResponseEntity {
     public Integer code;
     public String message;

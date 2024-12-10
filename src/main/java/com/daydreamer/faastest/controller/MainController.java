@@ -1,28 +1,26 @@
 package com.daydreamer.faastest.controller;
 
 
-import com.daydreamer.faastest.entity.ServiceArgument;
 import com.daydreamer.faastest.entity.dto.manage.*;
-import com.daydreamer.faastest.service.FunctionService;
+import com.daydreamer.faastest.entity.dto.service.ServiceResult;
+import com.daydreamer.faastest.service.UseServiceFunctionImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
-public class UserController {
+public class MainController {
 
     AddFunctionService addFunctionService;
     DeleteFunctionService deleteFunctionService;
     QueryFunctionService queryFunctionService;
     UpdateFunctionService updateFunctionService;
-    FunctionService functionService;
+    UseServiceFunction functionService;
 
     @Autowired
-    public UserController(AddFunctionService addFunctionService, DeleteFunctionService deleteFunctionService, QueryFunctionService queryFunctionService, UpdateFunctionService updateFunctionService, FunctionService functionService) {
+    public MainController(AddFunctionService addFunctionService, DeleteFunctionService deleteFunctionService, QueryFunctionService queryFunctionService, UpdateFunctionService updateFunctionService, UseServiceFunction functionService) {
         this.addFunctionService = addFunctionService;
         this.deleteFunctionService = deleteFunctionService;
         this.queryFunctionService = queryFunctionService;
@@ -63,20 +61,20 @@ public class UserController {
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/**", method = RequestMethod.POST)
-    public Object handlePostRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
-        return handleRequest(request, body);
+    public ServiceResult handlePostRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
+        return functionService.useServiceFunction(request, body);
     }
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/**", method = RequestMethod.DELETE)
-    public Object handleDeleteRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
-        return handleRequest(request, body);
+    public ServiceResult handleDeleteRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
+        return functionService.useServiceFunction(request, body);
     }
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/**", method = RequestMethod.PUT)
-    public Object handlePutRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
-        return handleRequest(request, body);
+    public ServiceResult handlePutRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
+        return functionService.useServiceFunction(request, body);
     }
 
     /**
@@ -84,37 +82,8 @@ public class UserController {
      */
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/**", method = RequestMethod.GET)
-    public Object handleGetRequest(HttpServletRequest request) {
-        return handleRequest(request, null);
+    public ServiceResult handleGetRequest(HttpServletRequest request) {
+        return functionService.useServiceFunction(request, null);
     }
 
-    private Object handleRequest(HttpServletRequest request, Map<String, Object> body) {
-        String path = request.getRequestURI();
-        String userAgent = request.getHeader("User-Agent");
-        String ip = request.getRemoteAddr();
-        String query = request.getQueryString();
-        String requestMethod = request.getMethod();
-        System.out.println("path: " + path);
-        System.out.println("userAgent: " + userAgent);
-        System.out.println("ip: " + ip);
-        System.out.println("query: " + query);
-        System.out.println("requestMethod: " + requestMethod);
-        System.out.println("body: ");
-        if (body != null) {
-            for (Map.Entry<String, Object> entry : body.entrySet()) {
-                System.out.println(entry.getKey() + ": " + entry.getValue());
-            }
-        }
-
-        if (functionService.isFunctionServicePathValid(path)) {
-            System.out.println("使用服务");
-            ArrayList<ServiceArgument> args = new ArrayList<>();
-            for (Map.Entry<String, Object> entry : body.entrySet()) {
-                args.add(new ServiceArgument(entry.getKey(), entry.getValue()));
-            }
-            return functionService.useFunctionService(path, args);
-        }
-        System.out.println("未使用服务");
-        return null;
-    }
 }
