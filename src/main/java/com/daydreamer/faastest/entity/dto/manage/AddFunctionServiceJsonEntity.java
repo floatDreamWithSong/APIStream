@@ -1,6 +1,7 @@
 package com.daydreamer.faastest.entity.dto.manage;
 
 import com.daydreamer.faastest.entity.ServiceArgument;
+import com.daydreamer.faastest.entity.dto.manage.common.Options;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +16,4 @@ public class AddFunctionServiceJsonEntity {
     public String method;
     public String path;
     public Options options;
-    public static class Options {
-        public Integer maxCps;
-    }
 }
