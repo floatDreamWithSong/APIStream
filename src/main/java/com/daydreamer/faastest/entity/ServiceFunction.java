@@ -16,7 +16,6 @@ public class ServiceFunction {
     public ArrayList<ServiceArgument> arguments;
     public UUID serviceId;
     public String CompleteCode;
-    private JavascriptContext javascriptContext;
 
     public ServiceFunction(String serviceFunctionName, String ServiceCode, ArrayList<ServiceArgument> arguments) {
         this.serviceFunctionName = serviceFunctionName;
@@ -35,12 +34,13 @@ public class ServiceFunction {
         }
         completeCodeBuilder.append(ServiceCode).append("};");
         this.CompleteCode = completeCodeBuilder.toString();
-        this.javascriptContext = new JavascriptContext();
-        javascriptContext.context.eval("js", this.CompleteCode);
+
     }
 
     public ServiceResult runService(ArrayList<ServiceArgument> serviceFunctionArguments) {
         ServiceResult serviceResult = new ServiceResult();
+        JavascriptContext javascriptContext = new JavascriptContext();
+        javascriptContext.context.eval("js", this.CompleteCode);
         ByteArrayOutputStream outputStream = javascriptContext.outputStream;
         Context context = javascriptContext.context;
         StringBuilder jsCode = new StringBuilder();
