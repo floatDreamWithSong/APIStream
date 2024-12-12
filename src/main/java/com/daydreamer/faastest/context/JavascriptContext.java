@@ -13,6 +13,7 @@ public interface JavascriptContext {
 
     /**
      *  初始化或者重新设置所有上下文的执行函数，（不能仅修改原上下文，否则会导致已经被替换过的函数仍然是可访问的）
+     *  不过现在好像没用。
      * @param functionCode 保证是一条定义函数的语句
      * @return 是否设置成功
      */

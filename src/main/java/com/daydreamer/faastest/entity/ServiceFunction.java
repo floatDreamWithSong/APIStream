@@ -17,7 +17,7 @@ public class ServiceFunction {
     public ArrayList<ServiceArgument> arguments;
     public UUID serviceId;
     public String CompleteCode;
-    private JavascriptContext javascriptContext;
+    private final JavascriptContext javascriptContext;
 
     public ServiceFunction(String serviceFunctionName, String ServiceCode, ArrayList<ServiceArgument> arguments) {
         this.serviceFunctionName = serviceFunctionName;
@@ -37,7 +37,6 @@ public class ServiceFunction {
         completeCodeBuilder.append(ServiceCode).append("};");
         this.CompleteCode = completeCodeBuilder.toString();
         this.javascriptContext = new JavascriptContextImpl(2, CompleteCode);
-//        this.javascriptContext.setServiceFunction(CompleteCode);
     }
 
     public String runService(ArrayList<ServiceArgument> serviceFunctionArguments)  {
