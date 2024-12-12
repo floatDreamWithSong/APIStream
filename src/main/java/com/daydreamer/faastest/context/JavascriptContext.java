@@ -9,7 +9,7 @@ public interface JavascriptContext {
      * @param evalStatement 每次执行的语句，已经保证是一条执行函数的语句
      * @return ServiceResult类，需要你收集输出，报错，运行结果
      */
-    ServiceResult callServiceFunction(String evalStatement);
+    String callServiceFunction(String evalStatement);
 
     /**
      *  初始化或者重新设置所有上下文的执行函数，（不能仅修改原上下文，否则会导致已经被替换过的函数仍然是可访问的）

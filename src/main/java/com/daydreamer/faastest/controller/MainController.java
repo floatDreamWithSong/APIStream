@@ -61,19 +61,19 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/**", method = RequestMethod.POST)
-    public ServiceResult handlePostRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
+    public String handlePostRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
         return functionService.useServiceFunction(request, body);
     }
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/**", method = RequestMethod.DELETE)
-    public ServiceResult handleDeleteRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
+    public String handleDeleteRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
         return functionService.useServiceFunction(request, body);
     }
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/**", method = RequestMethod.PUT)
-    public ServiceResult handlePutRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
+    public String handlePutRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
         return functionService.useServiceFunction(request, body);
     }
 
@@ -82,7 +82,7 @@ public class MainController {
      */
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/**", method = RequestMethod.GET)
-    public ServiceResult handleGetRequest(HttpServletRequest request) {
+    public String handleGetRequest(HttpServletRequest request) {
         return functionService.useServiceFunction(request, null);
     }
 

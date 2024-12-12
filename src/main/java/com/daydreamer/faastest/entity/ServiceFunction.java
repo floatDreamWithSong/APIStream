@@ -36,11 +36,11 @@ public class ServiceFunction {
         }
         completeCodeBuilder.append(ServiceCode).append("};");
         this.CompleteCode = completeCodeBuilder.toString();
-        this.javascriptContext = new JavascriptContextImpl();
-        this.javascriptContext.setServiceFunction(CompleteCode);
+        this.javascriptContext = new JavascriptContextImpl(2, CompleteCode);
+//        this.javascriptContext.setServiceFunction(CompleteCode);
     }
 
-    public ServiceResult runService(ArrayList<ServiceArgument> serviceFunctionArguments) {
+    public String runService(ArrayList<ServiceArgument> serviceFunctionArguments)  {
         Gson gson = new Gson();
         StringBuilder jsCode = new StringBuilder();
         jsCode.append(serviceFunctionName).append("(");

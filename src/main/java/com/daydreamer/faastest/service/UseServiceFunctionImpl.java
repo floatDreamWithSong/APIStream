@@ -14,7 +14,7 @@ import java.util.Map;
 public class UseServiceFunctionImpl implements UseServiceFunction {
 
     @Override
-    public ServiceResult useServiceFunction(HttpServletRequest request, Map<String, Object> body) {
+    public String useServiceFunction(HttpServletRequest request, Map<String, Object> body) {
         String path = request.getRequestURI();
         String userAgent = request.getHeader("User-Agent");
         String ip = request.getRemoteAddr();

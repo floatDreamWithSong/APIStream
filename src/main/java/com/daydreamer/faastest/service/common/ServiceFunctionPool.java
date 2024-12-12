@@ -12,7 +12,7 @@ public class ServiceFunctionPool {
     public static boolean hasServiceFunctionOnPath(String path) {
         return serviceFunctionMap.containsKey(path);
     }
-    public static ServiceResult runServiceFunction(String path, ArrayList<ServiceArgument> arguments){
+    public static String runServiceFunction(String path, ArrayList<ServiceArgument> arguments){
         if(hasServiceFunctionOnPath(path)){
             return serviceFunctionMap.get(path).runService(arguments);
         }

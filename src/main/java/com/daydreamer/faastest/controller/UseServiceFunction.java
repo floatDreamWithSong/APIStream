@@ -6,5 +6,5 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 public interface UseServiceFunction {
-    public ServiceResult useServiceFunction(HttpServletRequest request, Map<String, Object> body);
+    public String useServiceFunction(HttpServletRequest request, Map<String, Object> body);
 }
