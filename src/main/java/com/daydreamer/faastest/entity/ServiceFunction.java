@@ -1,6 +1,7 @@
 package com.daydreamer.faastest.entity;
 
 import com.daydreamer.faastest.context.JavascriptContext;
+import com.daydreamer.faastest.context.JavascriptContextImpl;
 import com.daydreamer.faastest.entity.dto.service.ServiceResult;
 import com.google.gson.Gson;
 import org.graalvm.polyglot.Context;
@@ -16,6 +17,7 @@ public class ServiceFunction {
     public ArrayList<ServiceArgument> arguments;
     public UUID serviceId;
     public String CompleteCode;
+    private JavascriptContext javascriptContext;
 
     public ServiceFunction(String serviceFunctionName, String ServiceCode, ArrayList<ServiceArgument> arguments) {
         this.serviceFunctionName = serviceFunctionName;
@@ -34,22 +36,17 @@ public class ServiceFunction {
         }
         completeCodeBuilder.append(ServiceCode).append("};");
         this.CompleteCode = completeCodeBuilder.toString();
-
+        this.javascriptContext = new JavascriptContextImpl();
+        this.javascriptContext.setServiceFunction(CompleteCode);
     }
 
     public ServiceResult runService(ArrayList<ServiceArgument> serviceFunctionArguments) {
-        ServiceResult serviceResult = new ServiceResult();
-        JavascriptContext javascriptContext = new JavascriptContext();
-        javascriptContext.context.eval("js", this.CompleteCode);
-        ByteArrayOutputStream outputStream = javascriptContext.outputStream;
-        Context context = javascriptContext.context;
-        StringBuilder jsCode = new StringBuilder();
         Gson gson = new Gson();
-
+        StringBuilder jsCode = new StringBuilder();
         jsCode.append(serviceFunctionName).append("(");
         for (int i = 0; i < serviceFunctionArguments.size(); i++) {
             ServiceArgument serviceArgument = serviceFunctionArguments.get(i);
-            Value v = context.asValue(gson.toJson(serviceArgument.value));
+            String v = gson.toJson(serviceArgument.value);
             System.out.println(serviceArgument.value);
             System.out.println(v);
             jsCode.append("JSON.parse('");
@@ -60,41 +57,12 @@ public class ServiceFunction {
                 jsCode.append("'));");
             }
         }
-        System.out.println("执行代码:"+jsCode.toString());
-        try {
-            Value res = context.eval("js", jsCode.toString());
-            System.out.println("执行结果:"+res);
-            serviceResult.result = jsValue2JavaValue(res);
-        } catch (Exception e) {
-            System.out.println("执行错误:"+ e.getMessage());
-            serviceResult.errorMessage = e.getMessage();
-        }
-        System.out.println("控制台输出:" + outputStream.toString());
-        serviceResult.consoleOutput = outputStream.toString();
-        outputStream.reset();
-        return serviceResult;
+
+        return javascriptContext.callServiceFunction(jsCode.toString());
     }
 
-    Object jsValue2JavaValue(Value res) {
-        if (res.isBoolean()) {
-            return res.asBoolean();
-        } else if (res.isNumber()) {
-            return res.asDouble();
-        } else if (res.isString()) {
-            return res.asString();
-        } else if (res.hasArrayElements()) {
-            long size = res.getArraySize();
-            ArrayList<Object> list = new ArrayList<>();
-            for (long i = 0; i < size; i++) {
-                Value element = res.getArrayElement(i);
-                list.add(jsValue2JavaValue(element));
-            }
-            return list;
-        } else if (res.hasMembers()) {
-            return res.as(Object.class);
-        }
-        System.out.println("Exception" + res.hasArrayElements());
-        return res.asString();
+    public boolean resetServiceFunction(){
+        return false;
     }
 }
 
