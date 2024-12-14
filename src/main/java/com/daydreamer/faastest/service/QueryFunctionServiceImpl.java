@@ -1,10 +1,10 @@
 package com.daydreamer.faastest.service;
 
 import com.daydreamer.faastest.controller.QueryFunctionService;
-import com.daydreamer.faastest.entity.dto.manage.QueryFunctionDetailParamEntity;
-import com.daydreamer.faastest.entity.dto.manage.QueryFunctionDetailResponseEntity;
-import com.daydreamer.faastest.entity.dto.manage.QueryFunctionListResponseEntity;
-import com.daydreamer.faastest.entity.dto.manage.QueryFunctionListParamEntity;
+import com.daydreamer.faastest.entity.dto.manage.receive.QueryFunctionDetailParamEntity;
+import com.daydreamer.faastest.entity.dto.manage.response.QueryFunctionDetailResponseEntity;
+import com.daydreamer.faastest.entity.dto.manage.response.QueryFunctionListResponseEntity;
+import com.daydreamer.faastest.entity.dto.manage.receive.QueryFunctionListParamEntity;
 import org.springframework.stereotype.Service;
 
 @Service

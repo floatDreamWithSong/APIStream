@@ -1,9 +1,9 @@
 package com.daydreamer.faastest.controller;
 
 
-import com.daydreamer.faastest.entity.dto.manage.*;
+import com.daydreamer.faastest.entity.dto.manage.receive.*;
+import com.daydreamer.faastest.entity.dto.manage.response.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -17,7 +17,6 @@ public class MainController {
     UpdateFunctionService updateFunctionService;
     UseServiceFunction functionService;
 
-    @Autowired
     public MainController(AddFunctionService addFunctionService, DeleteFunctionService deleteFunctionService, QueryFunctionService queryFunctionService, UpdateFunctionService updateFunctionService, UseServiceFunction functionService) {
         this.addFunctionService = addFunctionService;
         this.deleteFunctionService = deleteFunctionService;
