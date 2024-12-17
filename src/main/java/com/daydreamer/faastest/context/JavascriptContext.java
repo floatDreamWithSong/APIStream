@@ -1,7 +1,5 @@
 package com.daydreamer.faastest.context;
 
-import com.daydreamer.faastest.entity.dto.service.ServiceResult;
-
 public interface JavascriptContext {
     /**
      * 队医单个服务函数，它是单例，单例应该拥有相同的上下文函数，而graalvm上下文不能多个线程访问，要保证可以同时运行多个上下文

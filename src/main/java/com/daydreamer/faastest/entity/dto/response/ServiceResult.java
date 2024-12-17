@@ -1,4 +1,4 @@
-package com.daydreamer.faastest.entity.dto.service;
+package com.daydreamer.faastest.entity.dto.response;
 
 public class ServiceResult {
     public String errorMessage;

@@ -1,17 +1,18 @@
 package com.daydreamer.faastest.service;
 
-import com.daydreamer.faastest.controller.UseServiceFunction;
+import com.daydreamer.faastest.controller.UseServiceModule;
 import com.daydreamer.faastest.entity.ServiceArgument;
-import com.daydreamer.faastest.entity.dto.service.ServiceResult;
-import com.daydreamer.faastest.service.common.ServiceFunctionPool;
+import com.daydreamer.faastest.service.common.ServiceModulePool;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Map;
 
+@Slf4j
 @Service
-public class UseServiceFunctionImpl implements UseServiceFunction {
+public class UseServiceModuleImpl implements UseServiceModule {
 
     @Override
     public String useServiceFunction(HttpServletRequest request, Map<String, Object> body) {
@@ -27,30 +28,28 @@ public class UseServiceFunctionImpl implements UseServiceFunction {
         System.out.println("requestMethod: " + requestMethod);
         System.out.println("body: ");
         if (requestMethod.equals("GET")) {
-            if (ServiceFunctionPool.hasServiceFunctionOnPath(path)) {
-                System.out.println("使用服务");
+            if (ServiceModulePool.instance.hasServiceOnPath(path)) {
+                log.info("使用服务");
                 ArrayList<ServiceArgument> args = new ArrayList<>();
 
                 // TODO: 实现GET的动态参数提取
 
-                return ServiceFunctionPool.runServiceFunction(path, args);
+                return ServiceModulePool.instance.callModule(path, args);
             }
-            System.out.println("未找到服务");
         } else if (body != null) {
             for (Map.Entry<String, Object> entry : body.entrySet()) {
                 System.out.println(entry.getKey() + ": " + entry.getValue());
             }
-            if (ServiceFunctionPool.hasServiceFunctionOnPath(path)) {
-                System.out.println("使用服务");
+            if (ServiceModulePool.instance.hasServiceOnPath(path)) {
+                log.info("使用服务");
                 ArrayList<ServiceArgument> args = new ArrayList<>();
                 for (Map.Entry<String, Object> entry : body.entrySet()) {
                     args.add(new ServiceArgument(entry.getKey(), entry.getValue()));
                 }
-                return ServiceFunctionPool.runServiceFunction(path, args);
+                return ServiceModulePool.instance.callModule(path, args);
             }
-            System.out.println("未找到服务");
         }
-        System.out.println("未使用服务");
+        log.info("未找到服务");
         return null;
     }
 }

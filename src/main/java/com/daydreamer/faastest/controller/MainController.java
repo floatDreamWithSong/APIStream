@@ -1,86 +1,38 @@
 package com.daydreamer.faastest.controller;
 
 
-import com.daydreamer.faastest.entity.dto.manage.receive.*;
-import com.daydreamer.faastest.entity.dto.manage.response.*;
+import com.daydreamer.faastest.entity.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
+import com.daydreamer.faastest.entity.dto.response.UniResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@AllArgsConstructor
 @RestController
 public class MainController {
 
-    AddFunctionService addFunctionService;
-    DeleteFunctionService deleteFunctionService;
-    QueryFunctionService queryFunctionService;
-    UpdateFunctionService updateFunctionService;
-    UseServiceFunction functionService;
+    private UseServiceModule useServiceModule;
+    private AddServiceModule addServiceModule;
 
-    public MainController(AddFunctionService addFunctionService, DeleteFunctionService deleteFunctionService, QueryFunctionService queryFunctionService, UpdateFunctionService updateFunctionService, UseServiceFunction functionService) {
-        this.addFunctionService = addFunctionService;
-        this.deleteFunctionService = deleteFunctionService;
-        this.queryFunctionService = queryFunctionService;
-        this.updateFunctionService = updateFunctionService;
-        this.functionService = functionService;
+    @CrossOrigin(origins = "*")
+    @PostMapping("/APIStreamModuleServiceSDK")
+    public UniResponse addServiceModuleSDK(@RequestBody AddModuleServiceSDKJsonEntity body) {
+        return addServiceModule.addModule(body);
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/APIStreamFunctionService")
-    public AddFunctionServiceResponseEntity addServiceFunction(@RequestBody AddFunctionServiceJsonEntity body) {
-        return addFunctionService.addFunction(body);
-    }
-
-    @CrossOrigin(origins = "*")
-    @DeleteMapping("/APIStreamFunctionService")
-    public DeleteFunctionServiceResponseEntity deleteServiceFunction(@RequestBody DeleteFunctionServiceJsonEntity body) {
-        return deleteFunctionService.deleteFunctionService(body);
-    }
-
-    @CrossOrigin(origins = "*")
-    @PutMapping("/APIStreamFunctionService")
-    public UpdateFunctionServiceResponseEntity updateServiceFunction(@RequestBody UpdateFunctionServiceJsonEntity body) {
-        return updateFunctionService.updateFunction(body);
-    }
-
-    @CrossOrigin(origins = "*")
-    @GetMapping("/APIStreamFunctionService/list")
-    public QueryFunctionListResponseEntity queryFunctionList(@RequestParam QueryFunctionListParamEntity params) {
-        return queryFunctionService.queryFunctionList(params);
-    }
-
-    @CrossOrigin(origins = "*")
-    @GetMapping("/APIStreamFunctionService")
-    public QueryFunctionDetailResponseEntity queryFunctionDetail(@RequestParam QueryFunctionDetailParamEntity params) {
-        return queryFunctionService.queryFunctionDetail(params);
-    }
-
-
-    @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/**", method = RequestMethod.POST)
+    @PostMapping(value = "/**")
     public String handlePostRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
-        return functionService.useServiceFunction(request, body);
+        return useServiceModule.useServiceFunction(request, body);
     }
-
-    @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/**", method = RequestMethod.DELETE)
-    public String handleDeleteRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
-        return functionService.useServiceFunction(request, body);
-    }
-
-    @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/**", method = RequestMethod.PUT)
-    public String handlePutRequest(HttpServletRequest request, @RequestBody Map<String, Object> body) {
-        return functionService.useServiceFunction(request, body);
-    }
-
     /**
      * 由于Get方法没有Body，解析Body会报错，所以要单独拿出来，这里需要抽离公共逻辑，再做一层控制器
      */
-    @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/**", method = RequestMethod.GET)
-    public String handleGetRequest(HttpServletRequest request) {
-        return functionService.useServiceFunction(request, null);
-    }
-
+//    @CrossOrigin(origins = "*")
+//    @GetMapping(value = "/**")
+//    public String handleGetRequest(HttpServletRequest request) {
+//        return functionService.useServiceFunction(request, null);
+//    }
 }

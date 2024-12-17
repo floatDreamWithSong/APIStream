@@ -1,7 +1,7 @@
 package com.daydreamer.faastest.context;
 
 import com.daydreamer.faastest.common.JsonProcessor;
-import com.daydreamer.faastest.entity.dto.service.ServiceResult;
+import com.daydreamer.faastest.entity.dto.response.ServiceResult;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 import java.io.ByteArrayOutputStream;
@@ -19,6 +19,7 @@ public class JavascriptContextImpl implements JavascriptContext {
     }
     @Override
     public String callServiceFunction(String evalStatement) {
+        System.out.println(evalStatement);
         ServiceResult serviceResult = new ServiceResult();
         JavascriptContextCore core = null;
         try {
@@ -49,6 +50,7 @@ public class JavascriptContextImpl implements JavascriptContext {
     @Override
     public void setServiceFunction (Integer MaxConcurrent, String functionCode) {
         System.out.println("MaxConcurrent: " + MaxConcurrent);
+        System.out.println("functionCode: " + functionCode);
         this.availableContext = new LinkedBlockingQueue<>();
         this.MaxConcurrent = MaxConcurrent;
         for (int i = 0; i < MaxConcurrent; i++) {
