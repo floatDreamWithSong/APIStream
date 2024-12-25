@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 public class FaasTestApplication {
     public static void main(String[] args) {
+        System.setProperty("polyglot.engine.WarnInterpreterOnly", "false");
         for(int i=0;i<args.length;i++) {
             System.out.println(args[i]);
             if(args[i].equals("--key") && i+1<args.length) {

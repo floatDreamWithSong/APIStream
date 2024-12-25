@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,10 +42,8 @@ public class SDKInterceptor implements HandlerInterceptor {
 //            flag = false;
 //        }
         String userToken = request.getHeader("Authorization");
-        log.info("userToken:{}", userToken);
-        log.info("sdkToken:{}", SDKConfig.sdkToken);
         if(!SDKConfig.sdkToken.isEmpty() && !SDKConfig.sdkToken.equals(userToken)) {
-//            flag = false;
+            flag = false;
         }
         return flag;
     }
@@ -63,10 +62,9 @@ public class SDKInterceptor implements HandlerInterceptor {
             int time = 1000;
             //打印方法执行时间
             if (executeTime > time) {
-                System.out.println("[" + method.getDeclaringClass().getName() + "." + method.getName() + "] 执行耗时 : "
-                        + executeTime + "ms");
+                log.info("[{}.{}] 执行耗时 : {}ms", method.getDeclaringClass().getName(), method.getName(), executeTime);
             } else {
-                System.out.println("[" + method.getDeclaringClass().getSimpleName() + "." + method.getName() + "] 执行耗时 : "
+                log.info("[" + method.getDeclaringClass().getSimpleName() + "." + method.getName() + "] 执行耗时 : "
                         + executeTime + "ms");
             }
         }
