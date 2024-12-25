@@ -1,6 +1,7 @@
 package com.daydreamer.faastest.service;
 
-import com.daydreamer.faastest.controller.UseServiceModule;
+import com.daydreamer.faastest.common.JsonProcessor;
+import com.daydreamer.faastest.controller.interfaces.UseService;
 import com.daydreamer.faastest.entity.ServiceArgument;
 import com.daydreamer.faastest.service.common.ServiceModulePool;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,10 +13,11 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class UseServiceModuleImpl implements UseServiceModule {
+public class UseServiceImpl implements UseService {
 
     @Override
     public String useServiceFunction(HttpServletRequest request, Map<String, Object> body) {
+        log.info(JsonProcessor.gson.toJson(body));
         String path = request.getRequestURI();
         String userAgent = request.getHeader("User-Agent");
         String ip = request.getRemoteAddr();
