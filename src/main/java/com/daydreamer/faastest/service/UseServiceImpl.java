@@ -17,18 +17,17 @@ public class UseServiceImpl implements UseService {
 
     @Override
     public String useServiceFunction(HttpServletRequest request, Map<String, Object> body) {
-        log.info(JsonProcessor.gson.toJson(body));
         String path = request.getRequestURI();
-        String userAgent = request.getHeader("User-Agent");
-        String ip = request.getRemoteAddr();
-        String query = request.getQueryString();
+//        String userAgent = request.getHeader("User-Agent");
+//        String ip = request.getRemoteAddr();
+//        String query = request.getQueryString();
         String requestMethod = request.getMethod();
-        System.out.println("path: " + path);
-        System.out.println("userAgent: " + userAgent);
-        System.out.println("ip: " + ip);
-        System.out.println("query: " + query);
-        System.out.println("requestMethod: " + requestMethod);
-        System.out.println("body: ");
+//        System.out.println("path: " + path);
+//        System.out.println("userAgent: " + userAgent);
+//        System.out.println("ip: " + ip);
+//        System.out.println("query: " + query);
+//        System.out.println("requestMethod: " + requestMethod);
+//        System.out.println("body: ");
         if (requestMethod.equals("GET")) {
             if (ServiceModulePool.instance.hasServiceOnPath(path)) {
                 log.info("使用服务");
@@ -39,11 +38,10 @@ public class UseServiceImpl implements UseService {
                 return ServiceModulePool.instance.callModule(path, args);
             }
         } else if (body != null) {
-            for (Map.Entry<String, Object> entry : body.entrySet()) {
-                System.out.println(entry.getKey() + ": " + entry.getValue());
-            }
+//            for (Map.Entry<String, Object> entry : body.entrySet()) {
+//                System.out.println(entry.getKey() + ": " + entry.getValue());
+//            }
             if (ServiceModulePool.instance.hasServiceOnPath(path)) {
-                log.info("使用服务");
                 ArrayList<ServiceArgument> args = new ArrayList<>();
                 for (Map.Entry<String, Object> entry : body.entrySet()) {
                     args.add(new ServiceArgument(entry.getKey(), entry.getValue()));

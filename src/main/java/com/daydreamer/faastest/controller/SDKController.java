@@ -1,6 +1,7 @@
 package com.daydreamer.faastest.controller;
 
 
+import com.daydreamer.faastest.common.JsonProcessor;
 import com.daydreamer.faastest.controller.interfaces.SDKService;
 import com.daydreamer.faastest.controller.interfaces.UseService;
 import com.daydreamer.faastest.entity.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
@@ -29,7 +30,9 @@ public class SDKController {
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/{dynamic_path:^(?!APIStreamModuleServiceSDK|APIStreamStaticResources).*}/**")
     public String handlePostRequest(HttpServletRequest request, @RequestBody Map<String, Object> body, @PathVariable String dynamic_path) {
-        log.info(dynamic_path);
+        log.info("service module: {}",dynamic_path);
+        log.info("body: {}",JsonProcessor.gson.toJson(body));
+        log.info("token: {}",request.getHeader("Authorization"));
         return useServiceModule.useServiceFunction(request, body);
     }
 

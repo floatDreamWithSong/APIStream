@@ -2,6 +2,7 @@ package com.daydreamer.faastest.context;
 
 import com.daydreamer.faastest.common.JsonProcessor;
 import com.daydreamer.faastest.entity.dto.response.ServiceResult;
+import lombok.extern.slf4j.Slf4j;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 import java.io.ByteArrayOutputStream;
@@ -9,6 +10,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.concurrent.*;
 
+@Slf4j
 public class JavascriptContextImpl implements JavascriptContext {
 
     public Integer MaxConcurrent;
@@ -19,7 +21,7 @@ public class JavascriptContextImpl implements JavascriptContext {
     }
     @Override
     public String callServiceFunction(String evalStatement) {
-        System.out.println(evalStatement);
+        log.debug(evalStatement);
         ServiceResult serviceResult = new ServiceResult();
         JavascriptContextCore core = null;
         try {
@@ -29,13 +31,13 @@ public class JavascriptContextImpl implements JavascriptContext {
             try {
                 Value res = context.eval("js", evalStatement);
                 serviceResult.result = jsValue2JavaValue(res);
-                System.out.println("执行结果:"+res);
+                log.info("执行结果:{}", res);
             } catch (Exception e) {
                 serviceResult.errorMessage = e.getMessage();
-                System.out.println("执行错误:"+ e.getMessage());
+                log.error("执行错误:{}", e.getMessage());
             }
             serviceResult.consoleOutput = outputStream.toString();
-            System.out.println("控制台输出:" + outputStream.toString());
+            log.info("控制台输出:{}", outputStream.toString());
             outputStream.reset();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -49,8 +51,8 @@ public class JavascriptContextImpl implements JavascriptContext {
 
     @Override
     public void setServiceFunction (Integer MaxConcurrent, String functionCode) {
-        System.out.println("MaxConcurrent: " + MaxConcurrent);
-        System.out.println("functionCode: " + functionCode);
+        log.debug("MaxConcurrent: {}", MaxConcurrent);
+        log.debug("functionCode: {}", functionCode);
         this.availableContext = new LinkedBlockingQueue<>();
         this.MaxConcurrent = MaxConcurrent;
         for (int i = 0; i < MaxConcurrent; i++) {
@@ -78,7 +80,7 @@ public class JavascriptContextImpl implements JavascriptContext {
         } else if (res.hasMembers()) {
             return res.as(Object.class);
         }
-        System.out.println("Exception" + res.hasArrayElements());
+        log.error("Exception{}", res.hasArrayElements());
         return res.asString();
     }
 }
