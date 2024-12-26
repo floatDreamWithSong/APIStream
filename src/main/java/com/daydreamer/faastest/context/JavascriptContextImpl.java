@@ -28,31 +28,32 @@ public class JavascriptContextImpl implements JavascriptContext {
             core = availableContext.take();
             Context context = core.context;
             ByteArrayOutputStream outputStream = core.outputStream;
+            Value res = null;
             try {
-                Value res = context.eval("js", evalStatement);
+                res = context.eval("js", evalStatement);
                 serviceResult.result = jsValue2JavaValue(res);
-                log.info("执行结果:{}", res);
+
             } catch (Exception e) {
                 serviceResult.errorMessage = e.getMessage();
                 log.error("执行错误:{}", e.getMessage());
+            } finally {
+                serviceResult.consoleOutput = outputStream.toString();
+                log.info("执行结果: {} 控制台输出:{}", res, outputStream.toString());
+                outputStream.reset();
             }
-            serviceResult.consoleOutput = outputStream.toString();
-            log.info("控制台输出:{}", outputStream.toString());
-            outputStream.reset();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         String resp = JsonProcessor.gson.toJson(serviceResult);
         if (core!=null)
             availableContext.offer(core);
-
         return resp;
     }
 
     @Override
     public void setServiceFunction (Integer MaxConcurrent, String functionCode) {
         log.debug("MaxConcurrent: {}", MaxConcurrent);
-        log.debug("functionCode: {}", functionCode);
+        log.debug("\nfunctionCode:\n {}", functionCode);
         this.availableContext = new LinkedBlockingQueue<>();
         this.MaxConcurrent = MaxConcurrent;
         for (int i = 0; i < MaxConcurrent; i++) {

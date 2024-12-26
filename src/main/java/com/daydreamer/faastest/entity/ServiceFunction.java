@@ -26,8 +26,6 @@ public class ServiceFunction {
         for (int i = 0; i < serviceFunctionArguments.size(); i++) {
             ServiceArgument serviceArgument = serviceFunctionArguments.get(i);
             String v = JsonProcessor.gson.toJson(serviceArgument.value);
-            System.out.println(serviceArgument.value);
-            System.out.println(v);
             jsCode.append("JSON.parse('");
             jsCode.append(v);
             if (i < serviceFunctionArguments.size() - 1) {

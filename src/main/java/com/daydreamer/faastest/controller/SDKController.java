@@ -21,18 +21,31 @@ public class SDKController {
     private UseService useServiceModule;
     private SDKService serviceModule;
 
+    /**
+     * 用于模块部署的服务接口，只负责添加并部署模块
+     * 状态：已完成
+     * @param body
+     * @return
+     */
     @CrossOrigin(origins = "*")
     @PostMapping("/APIStreamModuleServiceSDK")
     public UniResponse addServiceModuleSDK(@RequestBody AddModuleServiceSDKJsonEntity body) {
         return serviceModule.addModule(body);
     }
 
+    /**
+     * 用于模块调用的服务接口，只负责调用模块并返回计算结果
+     * 状态：已完成
+     * @param request
+     * @param body
+     * @param dynamic_path
+     * @return
+     */
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/{dynamic_path:^(?!APIStreamModuleServiceSDK|APIStreamStaticResources).*}/**")
     public String handlePostRequest(HttpServletRequest request, @RequestBody Map<String, Object> body, @PathVariable String dynamic_path) {
-        log.info("service module: {}",dynamic_path);
-        log.info("body: {}",JsonProcessor.gson.toJson(body));
-        log.info("token: {}",request.getHeader("Authorization"));
+        log.debug("service module: {}",dynamic_path);
+        log.debug("body: {}",JsonProcessor.gson.toJson(body));
         return useServiceModule.useServiceFunction(request, body);
     }
 
