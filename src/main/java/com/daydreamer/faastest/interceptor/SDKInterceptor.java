@@ -58,6 +58,7 @@ public class SDKInterceptor implements HandlerInterceptor {
         if(isSDKService(path)) {
             String userToken = request.getHeader("Authorization");
             if(!SDKConfig.sdkToken.isEmpty() && !SDKConfig.sdkToken.equals(userToken)) {
+                response.setStatus(401);
                 return false;
             }
         }

@@ -9,6 +9,8 @@ import java.util.UUID;
 
 public interface SDKService {
     UniResponse addModule(AddModuleServiceSDKJsonEntity json);
-    UniResponse deleteModule(UUID moduleId);
-    UniResponse deleteAllModules();
+    UniResponse createProject(String projectName);
+    UniResponse removeProject(String projectName);
+    UniResponse existProject(String projectName);
+    UniResponse overwriteProject(String projectName);
 }

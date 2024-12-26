@@ -6,4 +6,5 @@ import lombok.AllArgsConstructor;
 public class ResolvedPath{
     public String modulePath;
     public String functionName;
+    public String projectName;
 }

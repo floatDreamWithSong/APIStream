@@ -1,5 +1,6 @@
 package com.daydreamer.faastest.log;
 
+import com.daydreamer.faastest.common.ResolvedPath;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -71,13 +72,8 @@ public class AspectLog {
     }
     
     private String getLogDirectory(String path) {
-        path = ModulePath.resolvePath(path).modulePath;
-                //以字符串的最后一个'/'为分隔符分成两个字符串，返回前一个部分
-        int lastIndex = path.lastIndexOf('/');
-        if (lastIndex != -1) {
-            return path.substring(1, lastIndex);
-        }
-        return path;
+        ResolvedPath _path = ModulePath.resolvePath(path);
+        return _path.projectName + _path.modulePath.substring(1);
     }
     
     private StringBuilder createLogContent(HttpServletRequest request, ProceedingJoinPoint joinPoint) {
