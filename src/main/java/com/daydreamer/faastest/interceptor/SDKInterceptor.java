@@ -12,7 +12,6 @@ import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 @Slf4j
@@ -20,8 +19,9 @@ public class SDKInterceptor implements HandlerInterceptor {
 
     private boolean isSDKService(String path){
         return switch (path) {
-            case "/APIStreamModuleServiceSDK", "/APIStreamModuleDetailQueryService", "/APIStreamModuleQueryService",
-                 "/APIStreamProjectQueryService" -> true;
+            case "/APIStreamModuleDetailQueryService", "/APIStreamModuleQueryService",
+                 "/APIStreamProjectQueryService" -> !log.isDebugEnabled();
+            case "/APIStreamModuleServiceSDK" -> true;
             default -> false;
         };
     }

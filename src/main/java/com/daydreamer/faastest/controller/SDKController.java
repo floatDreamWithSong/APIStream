@@ -33,6 +33,12 @@ public class SDKController {
         return serviceModule.addModule(body);
     }
 
+    @CrossOrigin(origins = "*")
+    @DeleteMapping("/APIStreamModuleServiceSDK")
+    public UniResponse deleteServiceModuleSDK(@RequestParam(name = "module_id", required = true) String moduleId) {
+        return serviceModule.deleteModule(moduleId);
+    }
+
     /**
      * 用于模块调用的服务接口，只负责调用模块并返回计算结果
      * 状态：已完成

@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface SDKService {
     UniResponse addModule(AddModuleServiceSDKJsonEntity json);
-    UniResponse removeModule(UUID moduleId);
+    UniResponse deleteModule(UUID moduleId);
     UniResponse<ArrayList<ModuleInfo>> queryModuleList(int pageSize, int PageNumber);
 }
