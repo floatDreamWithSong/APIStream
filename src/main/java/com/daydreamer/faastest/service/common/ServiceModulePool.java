@@ -17,7 +17,7 @@ public class ServiceModulePool {
     public static ServiceModulePool instance = new ServiceModulePool();
     private HashMap<String, ServiceModule> modules = new HashMap<>();
     public void createModule(AddModuleServiceSDKJsonEntity json){
-        ServiceModule module =  new ServiceModule(json.path, json.initCode, json.MaxConcurrency);
+        ServiceModule module =  new ServiceModule(json.path, json.initCode, json.options.MaxConcurrency);
         json.functions.forEach(fn->module.addServiceFunction(new ServiceFunction(fn.name,fn.code,fn.args )));
         this.modules.put(json.path, module);
     }

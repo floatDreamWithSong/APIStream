@@ -33,3 +33,4 @@ build/
 ### VS Code ###
 .vscode/
 /src/test/java/com/daydreamer/faastest/mytest/**
+/src/test/
