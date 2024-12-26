@@ -1,4 +1,5 @@
 package com.daydreamer.faastest.service.common;
+import com.daydreamer.faastest.common.ResolvedPath;
 import com.daydreamer.faastest.entity.ServiceArgument;
 import com.daydreamer.faastest.entity.ServiceFunction;
 import com.daydreamer.faastest.entity.ServiceModule;
@@ -8,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static com.daydreamer.faastest.common.ModulePath.resolvePath;
 
 @Slf4j
 public class ServiceModulePool {
@@ -19,14 +22,7 @@ public class ServiceModulePool {
         this.modules.put(json.path, module);
     }
 
-    private ResolvedPath resolvePath(String path){
-        String modulePath;
-        String functionName;
-        int lastIndex = path.lastIndexOf("::");
-        modulePath = path.substring(0, lastIndex);
-        functionName = path.substring(lastIndex+2);
-        return new ResolvedPath(modulePath, functionName);
-    }
+
 
     public String callModule(String path, ArrayList<ServiceArgument> args){
         // 将path中最后一个"::"分割开来
@@ -45,9 +41,4 @@ public class ServiceModulePool {
         return false;
     }
 
-}
-@AllArgsConstructor
-class ResolvedPath{
-    public String modulePath;
-    public String functionName;
 }
