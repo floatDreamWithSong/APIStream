@@ -10,4 +10,5 @@ import java.util.UUID;
 public interface SDKService {
     UniResponse addModule(AddModuleServiceSDKJsonEntity json);
     UniResponse deleteModule(UUID moduleId);
+    UniResponse deleteAllModules();
 }

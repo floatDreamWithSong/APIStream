@@ -21,8 +21,22 @@ public class SDKServiceImpl implements SDKService {
         return new UniResponse(0, msg);
     }
 
+    /**
+     * TODO
+     * @param moduleId
+     * @return
+     */
     @Override
     public UniResponse deleteModule(UUID moduleId) {
+        return null;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    @Override
+    public UniResponse deleteAllModules() {
         return null;
     }
 }

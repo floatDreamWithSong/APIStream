@@ -76,7 +76,7 @@ public class SDKInterceptor implements HandlerInterceptor {
             long startTime = (long) request.getAttribute("requestStartTime");
             long endTime = System.currentTimeMillis();
             long executeTime = endTime - startTime;
-            int time = 1000;
+            int time = 100;
             String path = request.getRequestURI();
             if(isSDKService(path)){
                     log.info("<{}> 部署耗时 : {}ms, 完成时间 : {}", path, executeTime, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(endTime)));

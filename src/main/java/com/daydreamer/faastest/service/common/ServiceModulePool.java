@@ -4,7 +4,6 @@ import com.daydreamer.faastest.entity.ServiceArgument;
 import com.daydreamer.faastest.entity.ServiceFunction;
 import com.daydreamer.faastest.entity.ServiceModule;
 import com.daydreamer.faastest.entity.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -16,13 +15,12 @@ import static com.daydreamer.faastest.common.ModulePath.resolvePath;
 public class ServiceModulePool {
     public static ServiceModulePool instance = new ServiceModulePool();
     private HashMap<String, ServiceModule> modules = new HashMap<>();
+
     public void createModule(AddModuleServiceSDKJsonEntity json){
         ServiceModule module =  new ServiceModule(json.path, json.initCode, json.options.MaxConcurrency);
         json.functions.forEach(fn->module.addServiceFunction(new ServiceFunction(fn.name,fn.code,fn.args )));
         this.modules.put(json.path, module);
     }
-
-
 
     public String callModule(String path, ArrayList<ServiceArgument> args){
         // 将path中最后一个"::"分割开来
