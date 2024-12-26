@@ -19,9 +19,8 @@ public class SDKInterceptor implements HandlerInterceptor {
 
     private boolean isSDKService(String path){
         return switch (path) {
-            case "/APIStreamModuleDetailQueryService", "/APIStreamModuleQueryService",
-                 "/APIStreamProjectQueryService" -> !log.isDebugEnabled();
-            case "/APIStreamModuleServiceSDK" -> true;
+            case "/APIStreamModuleServiceSDK", "/APIStreamModuleDetailQueryService", "/APIStreamModuleQueryService",
+                 "/APIStreamProjectQueryService" -> true;
             default -> false;
         };
     }

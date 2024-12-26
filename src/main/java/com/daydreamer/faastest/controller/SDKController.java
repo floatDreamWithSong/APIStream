@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @AllArgsConstructor
@@ -36,7 +37,7 @@ public class SDKController {
     @CrossOrigin(origins = "*")
     @DeleteMapping("/APIStreamModuleServiceSDK")
     public UniResponse deleteServiceModuleSDK(@RequestParam(name = "module_id", required = true) String moduleId) {
-        return serviceModule.deleteModule(moduleId);
+        return serviceModule.deleteModule(UUID.fromString(moduleId));
     }
 
     /**

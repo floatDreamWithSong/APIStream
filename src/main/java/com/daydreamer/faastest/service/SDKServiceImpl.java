@@ -22,13 +22,7 @@ public class SDKServiceImpl implements SDKService {
     }
 
     @Override
-    public UniResponse removeModule(UUID moduleId) {
+    public UniResponse deleteModule(UUID moduleId) {
         return null;
     }
-
-    @Override
-    public UniResponse queryModuleList(int pageSize, int PageNumber) {
-        return null;
-    }
-
 }
