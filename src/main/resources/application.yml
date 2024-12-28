@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: APIStream
+  web:
+    resources:
+      static-locations: "classpath:/public/, classpath:/META-INF/resources/, classpath:/resources/, classpath:/static/, file: logs/"
+  mvc:
+    static-path-pattern: "/APIStreamStaticResources/**"
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mybatis_plus
+    username: root
+    password: "@Dhj114514"
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    auto-mapping-behavior: full
+  global-config:
+    enable-sql-runner: true
+logging:
+  level:
+    com:
+      daydreamer: debug
+  file:
+    path: "system/logs"
+  logback:
+    rollingpolicy:
+      max-file-size: 2MB
+      max-history: 5
+      clean-history-on-start: true

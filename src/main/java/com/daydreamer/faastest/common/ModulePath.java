@@ -1,5 +1,6 @@
 package com.daydreamer.faastest.common;
 
+import com.daydreamer.faastest.common.modules.ResolvedPath;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

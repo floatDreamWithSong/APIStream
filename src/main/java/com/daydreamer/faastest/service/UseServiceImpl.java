@@ -1,9 +1,9 @@
 package com.daydreamer.faastest.service;
 
 import com.daydreamer.faastest.common.ModulePath;
-import com.daydreamer.faastest.common.ResolvedPath;
+import com.daydreamer.faastest.common.modules.ResolvedPath;
 import com.daydreamer.faastest.controller.interfaces.UseService;
-import com.daydreamer.faastest.entity.ServiceArgument;
+import com.daydreamer.faastest.common.modules.ServiceArgument;
 import com.daydreamer.faastest.service.common.ServiceProjectPool;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

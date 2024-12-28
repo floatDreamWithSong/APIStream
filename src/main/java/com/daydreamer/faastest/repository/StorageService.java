@@ -1,6 +1,6 @@
-package com.daydreamer.faastest.dao;
+package com.daydreamer.faastest.repository;
 
-import com.daydreamer.faastest.entity.ServiceFunction;
+import com.daydreamer.faastest.common.modules.ServiceFunction;
 
 import java.util.ArrayList;
 import java.util.UUID;

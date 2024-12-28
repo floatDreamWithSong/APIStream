@@ -1,8 +1,8 @@
 package com.daydreamer.faastest.controller.interfaces;
 
-import com.daydreamer.faastest.entity.dto.response.ListItem;
-import com.daydreamer.faastest.entity.dto.response.ModuleDetail;
-import com.daydreamer.faastest.entity.dto.response.UniResponse;
+import com.daydreamer.faastest.common.dto.response.ListItem;
+import com.daydreamer.faastest.common.dto.response.ModuleDetail;
+import com.daydreamer.faastest.common.dto.response.UniResponse;
 import java.util.List;
 
 /**

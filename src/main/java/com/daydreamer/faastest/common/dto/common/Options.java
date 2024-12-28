@@ -1,4 +1,4 @@
-package com.daydreamer.faastest.entity.dto.common;
+package com.daydreamer.faastest.common.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

@@ -1,7 +1,6 @@
-package com.daydreamer.faastest.entity;
+package com.daydreamer.faastest.common.modules;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 @AllArgsConstructor
 public class ServiceArgument {

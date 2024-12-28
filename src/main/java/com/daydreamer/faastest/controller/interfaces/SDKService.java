@@ -1,11 +1,7 @@
 package com.daydreamer.faastest.controller.interfaces;
 
-import com.daydreamer.faastest.entity.dto.info.ModuleInfo;
-import com.daydreamer.faastest.entity.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
-import com.daydreamer.faastest.entity.dto.response.UniResponse;
-
-import java.util.ArrayList;
-import java.util.UUID;
+import com.daydreamer.faastest.common.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
+import com.daydreamer.faastest.common.dto.response.UniResponse;
 
 public interface SDKService {
     UniResponse addModule(AddModuleServiceSDKJsonEntity json);

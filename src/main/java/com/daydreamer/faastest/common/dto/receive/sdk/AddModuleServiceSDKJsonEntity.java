@@ -1,6 +1,6 @@
-package com.daydreamer.faastest.entity.dto.receive.sdk;
+package com.daydreamer.faastest.common.dto.receive.sdk;
 
-import com.daydreamer.faastest.entity.dto.common.Options;
+import com.daydreamer.faastest.common.dto.common.Options;
 
 import java.util.ArrayList;
 

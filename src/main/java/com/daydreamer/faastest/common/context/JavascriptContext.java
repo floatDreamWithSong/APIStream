@@ -1,4 +1,4 @@
-package com.daydreamer.faastest.context;
+package com.daydreamer.faastest.common.context;
 
 public interface JavascriptContext {
     /**

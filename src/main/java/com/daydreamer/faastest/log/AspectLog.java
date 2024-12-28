@@ -1,6 +1,6 @@
 package com.daydreamer.faastest.log;
 
-import com.daydreamer.faastest.common.ResolvedPath;
+import com.daydreamer.faastest.common.modules.ResolvedPath;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

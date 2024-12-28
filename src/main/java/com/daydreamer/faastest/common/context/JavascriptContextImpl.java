@@ -1,7 +1,7 @@
-package com.daydreamer.faastest.context;
+package com.daydreamer.faastest.common.context;
 
 import com.daydreamer.faastest.common.JsonProcessor;
-import com.daydreamer.faastest.entity.dto.response.ServiceResult;
+import com.daydreamer.faastest.common.dto.response.ServiceResult;
 import lombok.extern.slf4j.Slf4j;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;

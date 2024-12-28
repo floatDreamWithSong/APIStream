@@ -1,14 +1,12 @@
 package com.daydreamer.faastest.service;
 
-import com.daydreamer.faastest.common.ResolvedPath;
+import com.daydreamer.faastest.common.modules.ResolvedPath;
 import com.daydreamer.faastest.controller.interfaces.SDKService;
-import com.daydreamer.faastest.entity.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
-import com.daydreamer.faastest.entity.dto.response.UniResponse;
+import com.daydreamer.faastest.common.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
+import com.daydreamer.faastest.common.dto.response.UniResponse;
 import com.daydreamer.faastest.service.common.ServiceProjectPool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 import static com.daydreamer.faastest.common.ModulePath.resolvePath;
 

@@ -1,4 +1,4 @@
-package com.daydreamer.faastest.entity;
+package com.daydreamer.faastest.common.modules;
 
 import com.daydreamer.faastest.common.JsonProcessor;
 

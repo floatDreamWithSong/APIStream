@@ -1,4 +1,4 @@
-package com.daydreamer.faastest.entity.dto.response;
+package com.daydreamer.faastest.common.dto.response;
 
 import lombok.AllArgsConstructor;
 

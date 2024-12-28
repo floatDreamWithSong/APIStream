@@ -1,4 +1,4 @@
-package com.daydreamer.faastest.common;
+package com.daydreamer.faastest.common.modules;
 
 import lombok.AllArgsConstructor;
 

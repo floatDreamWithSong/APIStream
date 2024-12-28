@@ -1,9 +1,9 @@
-package com.daydreamer.faastest.entity;
+package com.daydreamer.faastest.common.modules;
 
 import com.daydreamer.faastest.common.JsonProcessor;
-import com.daydreamer.faastest.context.JavascriptContext;
-import com.daydreamer.faastest.context.JavascriptContextImpl;
-import com.daydreamer.faastest.entity.dto.response.ServiceResult;
+import com.daydreamer.faastest.common.context.JavascriptContext;
+import com.daydreamer.faastest.common.context.JavascriptContextImpl;
+import com.daydreamer.faastest.common.dto.response.ServiceResult;
 import lombok.Getter;
 
 import java.util.ArrayList;

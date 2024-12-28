@@ -1,10 +1,10 @@
 package com.daydreamer.faastest.service.common;
 
 import com.daydreamer.faastest.common.ModulePath;
-import com.daydreamer.faastest.entity.ServiceArgument;
-import com.daydreamer.faastest.entity.ServiceFunction;
-import com.daydreamer.faastest.entity.ServiceModule;
-import com.daydreamer.faastest.entity.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
+import com.daydreamer.faastest.common.modules.ServiceArgument;
+import com.daydreamer.faastest.common.modules.ServiceFunction;
+import com.daydreamer.faastest.common.modules.ServiceModule;
+import com.daydreamer.faastest.common.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
 import java.util.ArrayList;
 import java.util.HashMap;
 

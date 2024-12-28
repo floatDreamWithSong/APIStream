@@ -1,13 +1,12 @@
 package com.daydreamer.faastest;
 
-import com.daydreamer.faastest.entity.SDKConfig;
+import com.daydreamer.faastest.common.dto.receive.SDKConfig;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
+@MapperScan("com.daydreamer.faastest.mapper")
 public class FaasTestApplication {
     public static void main(String[] args) {
         System.setProperty("polyglot.engine.WarnInterpreterOnly", "false");
