@@ -2,7 +2,6 @@ package com.daydreamer.faastest;
 
 import com.daydreamer.faastest.common.JsonProcessor;
 import com.daydreamer.faastest.common.ModulePath;
-import com.daydreamer.faastest.common.enums.SQLType;
 import com.daydreamer.faastest.entity.User;
 import com.daydreamer.faastest.mapper.UserMapper;
 import com.daydreamer.faastest.systemcall.SystemSQLRunner;
@@ -38,9 +37,5 @@ class FaasTestApplicationTests {
         userList.forEach(System.out::println);
     }
 
-    @Test
-    public void testInsert() {
-        String res = SystemSQLRunner.dropDatabase("faas_test");
-        System.out.println(res);
-    }
+
 }

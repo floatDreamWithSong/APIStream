@@ -51,7 +51,8 @@ public class AspectLog {
         log.debug(logDir);
         new File(logDir).mkdirs();
         // 构建日志文件路径
-        String logFile = LOG_PATH + ModulePath.resolvePath(path).modulePath.substring(1) + ".log";
+        ResolvedPath _path = ModulePath.resolvePath(path);
+        String logFile = LOG_PATH + _path.projectName+ _path.modulePath+ ".log";
         log.debug(logFile);
         // 记录执行时间
         long startTime = System.currentTimeMillis();
@@ -73,7 +74,7 @@ public class AspectLog {
     
     private String getLogDirectory(String path) {
         ResolvedPath _path = ModulePath.resolvePath(path);
-        return _path.projectName + _path.modulePath.substring(1);
+        return _path.projectName +'/'+ _path.modulePath.substring(0, _path.modulePath.lastIndexOf('/'));
     }
     
     private StringBuilder createLogContent(HttpServletRequest request, ProceedingJoinPoint joinPoint) {
