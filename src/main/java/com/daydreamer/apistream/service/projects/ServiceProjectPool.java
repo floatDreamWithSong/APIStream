@@ -2,11 +2,15 @@ package com.daydreamer.apistream.service.projects;
 
 import com.daydreamer.apistream.common.JsonProcessor;
 import com.daydreamer.apistream.common.ModulePath;
+import com.daydreamer.apistream.common.modules.ResolvedPath;
 import com.daydreamer.apistream.common.modules.ServiceArgument;
 import com.daydreamer.apistream.common.modules.ServiceFunction;
 import com.daydreamer.apistream.common.modules.ServiceModule;
 import com.daydreamer.apistream.common.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
+import com.daydreamer.apistream.mapper.APIStreamModuleMapper;
+import com.daydreamer.apistream.mapper.ApiStreamProjectMapper;
 import com.daydreamer.apistream.service.oss.Uploader;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +40,7 @@ public class ServiceProjectPool {
      * @return
      */
     public void createProject(String projectName) {
-        ServiceProject project = new ServiceProject();
+        ServiceProject project = new ServiceProject(projectName);
         projects.put(projectName, project);
     }
     /**
@@ -54,10 +58,15 @@ public class ServiceProjectPool {
      * @param json
      * @return
      */
-    public void insertModule(String projectName, AddModuleServiceSDKJsonEntity json) {
+    public UUID insertModule(String projectName, AddModuleServiceSDKJsonEntity json) {
         UUID uuid = UUID.randomUUID();
         uploader.uploadString(JsonProcessor.gson.toJson(json),uuid.toString());
         projects.get(projectName).createModule(json, uuid);
+        return uuid;
+    }
+    public void reCoverModule(AddModuleServiceSDKJsonEntity json, UUID uuid, Boolean isDisabled) {
+        String projectName = ModulePath.resolvePath(json.path).projectName;
+        projects.get(projectName).reCoverModule(json, uuid,isDisabled);
     }
 
     public boolean disableModule(String modulePath, String projectName) {
@@ -130,10 +139,12 @@ public class ServiceProjectPool {
 class ServiceProject {
     @Getter
     private String projectName;
-    @Getter
-    private UUID projectId;
     private HashMap<String, ServiceModule> modules = new HashMap<>();
     private HashMap<String,UUID> disabledMoudles = new HashMap<>();
+
+    public ServiceProject(String projectName) {
+        this.projectName = projectName;
+    }
 
     public boolean hasService(String modulePath, String fnName){
         if(!this.modules.containsKey(modulePath)){
@@ -153,6 +164,18 @@ class ServiceProject {
     public void createModule(@NotNull AddModuleServiceSDKJsonEntity json, UUID id) {
         String modulePath = ModulePath.resolvePath(json.path).modulePath;
         log.info("添加模块:{}",modulePath);
+        ServiceModule module =  new ServiceModule(modulePath, json.initCode, json.options.MaxConcurrency, id);
+        json.functions.forEach(fn->module.addServiceFunction(new ServiceFunction(fn.name,fn.code,fn.args )));
+        this.modules.put(modulePath, module);
+    }
+    public void reCoverModule(@NotNull AddModuleServiceSDKJsonEntity json, UUID id, Boolean isDisabled) {
+        String modulePath = ModulePath.resolvePath(json.path).modulePath;
+        if(isDisabled){
+            this.disabledMoudles.put(modulePath, id);
+            log.info("恢复禁用模块:{}",modulePath);
+            return;
+        }
+        log.info("恢复模块:{}",modulePath);
         ServiceModule module =  new ServiceModule(modulePath, json.initCode, json.options.MaxConcurrency, id);
         json.functions.forEach(fn->module.addServiceFunction(new ServiceFunction(fn.name,fn.code,fn.args )));
         this.modules.put(modulePath, module);
