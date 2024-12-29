@@ -25,6 +25,11 @@ logging:
     path: "system/logs"
   logback:
     rollingpolicy:
-      max-file-size: 2MB
-      max-history: 5
+      max-file-size: 10MB
+      max-history: 7
       clean-history-on-start: true
+minio:
+  access-key: 1rFgaZJgyyrCgWyzsMYy
+  secret-key: mzMiZ5qyVdmsCODPf90As2oHE3Juwrf3eQFOI2i7
+  url: http://192.168.31.75:9000
+  bucket-name: public
