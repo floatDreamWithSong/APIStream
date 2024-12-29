@@ -1,17 +1,18 @@
-package com.daydreamer.faastest.demo;
+package com.daydreamer.faastest.service.oss;
 
-import com.daydreamer.faastest.configuration.MinioConfig;
 import io.minio.*;
 import io.minio.http.Method;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -65,8 +66,7 @@ public class MinioUtil {
      */
     public void upload(MultipartFile file, String fileName) {
         // 使用putObject上传一个文件到存储桶中。
-        try {
-            InputStream inputStream = file.getInputStream();
+        try(InputStream inputStream = file.getInputStream()){
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(configuration.getBucketName())
                     .object(fileName)
@@ -76,6 +76,36 @@ public class MinioUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public void upload(String content, String fileName) {
+        byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
+        try (InputStream inputStream = new ByteArrayInputStream(bytes)) {
+            minioClient.putObject(PutObjectArgs.builder()
+                    .bucket(configuration.getBucketName())
+                    .object(fileName+".json")
+                    .stream(inputStream, bytes.length, -1)
+                    .contentType("application/json")
+                    .build());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    public String getString(String fileName) {
+        String jsonContent = null; // 初始化返回值
+        try {
+            GetObjectArgs getObjectArgs = GetObjectArgs.builder()
+                   .bucket(configuration.getBucketName())
+                   .object(fileName + ".json")
+                   .build();
+            try (InputStream is = minioClient.getObject(getObjectArgs)) {
+                // 将InputStream转换为String
+                jsonContent = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonContent; // 返回读取的内容
     }
 
     /**
@@ -158,4 +188,17 @@ public class MinioUtil {
         }
     }
 
+    public boolean existsJson(String fileName) {
+        try {
+            StatObjectArgs statObjectArgs = StatObjectArgs.builder()
+                    .bucket(configuration.getBucketName())
+                    .object(fileName + ".json")
+                    .build();
+            minioClient.statObject(statObjectArgs); // 如果文件存在，将不会抛出异常
+            return true; // 文件存在
+        } catch (Exception e) {
+            return false; // 文件不存在或其他异常
+        }
+    }
+    
 }

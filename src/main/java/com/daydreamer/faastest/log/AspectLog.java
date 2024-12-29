@@ -74,7 +74,7 @@ public class AspectLog {
     
     private String getLogDirectory(String path) {
         ResolvedPath _path = ModulePath.resolvePath(path);
-        return _path.projectName +'/'+ _path.modulePath.substring(0, _path.modulePath.lastIndexOf('/'));
+        return _path.projectName + _path.modulePath.substring(0, _path.modulePath.lastIndexOf('/'));
     }
     
     private StringBuilder createLogContent(HttpServletRequest request, ProceedingJoinPoint joinPoint) {

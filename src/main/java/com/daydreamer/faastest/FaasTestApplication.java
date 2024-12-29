@@ -1,6 +1,6 @@
 package com.daydreamer.faastest;
 
-import com.daydreamer.faastest.common.dto.receive.SDKConfig;
+import com.daydreamer.faastest.configuration.SDKConfig;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

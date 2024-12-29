@@ -28,4 +28,7 @@ public interface WebService {
      * @return
      */
     UniResponse<ModuleDetail> queryModuleDetail(String moduleId);
+
+    UniResponse<Boolean> disableModule(String modulePath, String projectName);
+    UniResponse<Boolean> enableModule(String modulePath, String projectName);
 }

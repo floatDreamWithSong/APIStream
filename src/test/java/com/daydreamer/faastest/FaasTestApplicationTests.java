@@ -4,7 +4,6 @@ import com.daydreamer.faastest.common.JsonProcessor;
 import com.daydreamer.faastest.common.ModulePath;
 import com.daydreamer.faastest.entity.User;
 import com.daydreamer.faastest.mapper.UserMapper;
-import com.daydreamer.faastest.systemcall.SystemSQLRunner;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,5 +36,9 @@ class FaasTestApplicationTests {
         userList.forEach(System.out::println);
     }
 
+    @Test
+    public void testConvert() {
+
+    }
 
 }

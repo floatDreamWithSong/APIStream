@@ -1,4 +1,4 @@
-package com.daydreamer.faastest.configuration;
+package com.daydreamer.faastest.service.oss;
 
 import io.minio.MinioClient;
 import lombok.Data;

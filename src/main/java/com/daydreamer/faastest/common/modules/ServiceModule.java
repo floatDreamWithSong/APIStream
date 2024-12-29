@@ -12,10 +12,11 @@ import java.util.UUID;
 
 public class ServiceModule {
     @Getter
-    private UUID id;
+    private final UUID id;
     @Getter
-    private String path;
-    private HashMap<String, ServiceFunction> functions;
+    private final String path;
+    private String initCode;
+    private final HashMap<String, ServiceFunction> functions;
     private final JavascriptContext javascriptContext;
 
     /** 如果没有环境变量，可以增加并行数量，因为不需要同步js上下文
@@ -23,10 +24,11 @@ public class ServiceModule {
      * @param MaxConcurrency 模块最大并行数量
      * @param initCode       初始化模块环境
      */
-    public ServiceModule(String path, String initCode, Integer MaxConcurrency) {
-        this.id = UUID.randomUUID();
+    public ServiceModule(String path, String initCode, int MaxConcurrency, UUID id) {
+        this.id = id;
         this.functions = new HashMap<>();
         this.path = path;
+        this.initCode = initCode;
         this.javascriptContext = new JavascriptContextImpl(MaxConcurrency, initCode);
     }
 
@@ -43,10 +45,6 @@ public class ServiceModule {
             return JsonProcessor.gson.toJson(new ServiceResult());
         ServiceFunction function = functions.get(serviceFunctionName);
         return javascriptContext.callServiceFunction(function.getCallFunctionCode(serviceFunctionArguments));
-    }
-
-    public void removeServiceFunction(ServiceFunction serviceFunction) {
-        functions.remove(serviceFunction.serviceFunctionName);
     }
 
     public boolean hasServiceFunction(String serviceFunctionName) {

@@ -9,12 +9,10 @@ public class ServiceFunction {
     public String serviceFunctionName;
     public String serviceCode;
     public ArrayList<ServiceArgument> arguments;
-    public UUID serviceId;
 
     public ServiceFunction(String serviceFunctionName, String ServiceCode, ArrayList<ServiceArgument> arguments) {
         this.serviceFunctionName = serviceFunctionName;
         this.arguments = arguments;
-        this.serviceId = UUID.randomUUID();
         this.serviceCode = ServiceCode;
     }
 

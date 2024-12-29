@@ -1,4 +1,4 @@
-package com.daydreamer.faastest.systemcall;
+package com.daydreamer.faastest.common.systemcall;
 
 import com.baomidou.mybatisplus.extension.toolkit.SqlRunner;
 import com.daydreamer.faastest.common.JsonProcessor;
