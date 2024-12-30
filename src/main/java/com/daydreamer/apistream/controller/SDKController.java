@@ -20,25 +20,25 @@ public class SDKController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/APIStreamProjectServiceSDK")
-    public UniResponse createServiceProjectSDK(@RequestParam(name = "project", required = true) String projectName) {
+    public UniResponse createServiceProjectSDK(@RequestParam(name = "project") String projectName) {
         return serviceModule.createProject(projectName);
     }
 
     @CrossOrigin(origins = "*")
     @DeleteMapping("/APIStreamProjectServiceSDK")
-    public UniResponse deleteServiceProjectSDK(@RequestParam(name = "project", required = true) String projectName) {
+    public UniResponse deleteServiceProjectSDK(@RequestParam(name = "project") String projectName) {
         return serviceModule.removeProject(projectName);
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/APIStreamProjectServiceSDK")
-    public UniResponse queryServiceProjectSDK(@RequestParam(name = "project", required = true) String projectName) {
+    public UniResponse queryServiceProjectSDK(@RequestParam(name = "project") String projectName) {
         return serviceModule.existProject(projectName);
     }
 
     @CrossOrigin(origins = "*")
     @PutMapping("/APIStreamProjectServiceSDK")
-    public UniResponse updateServiceProjectSDK(@RequestParam(name = "project", required = true) String projectName) {
+    public UniResponse updateServiceProjectSDK(@RequestParam(name = "project") String projectName) {
         return serviceModule.overwriteProject(projectName);
     }
 }

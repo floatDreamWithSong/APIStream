@@ -49,7 +49,12 @@ public class AspectLog {
         // 创建日志目录
         String logDir = LOG_PATH + getLogDirectory(path);
         log.debug(logDir);
-        new File(logDir).mkdirs();
+        // 是否已存在文件夹
+        File file = new File(logDir);
+        if (!file.exists()&&!new File(logDir).mkdirs()) {
+            log.debug("创建日志目录失败");
+            return null;
+        }
         // 构建日志文件路径
         ResolvedPath _path = ModulePath.resolvePath(path);
         String logFile = LOG_PATH + _path.projectName+ _path.modulePath+ ".log";
@@ -61,7 +66,7 @@ public class AspectLog {
         long endTime = System.currentTimeMillis();
         long executionTime = endTime - startTime;
         // 记录请求信息
-        String logContent = createLogContent(request, joinPoint)
+        String logContent = createLogContent(request)
                 .append("Execution Time: ").append(executionTime).append(" ms\n")
                 .append("Function Args: ").append(functionArgs).append("\n")
                 .append("Result: ").append(result.toString()).append("\n\n").toString();
@@ -77,14 +82,12 @@ public class AspectLog {
         return _path.projectName + _path.modulePath.substring(0, _path.modulePath.lastIndexOf('/'));
     }
     
-    private StringBuilder createLogContent(HttpServletRequest request, ProceedingJoinPoint joinPoint) {
+    private StringBuilder createLogContent(HttpServletRequest request) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         StringBuilder sb = new StringBuilder();
         sb.append("Time: ").append(sdf.format(new Date())).append("\n");
         sb.append("URL: ").append(request.getRequestURI()).append("\n");
-//        sb.append("Method: ").append(request.getMethod()).append("\n");
         sb.append("IP: ").append(request.getRemoteAddr()).append("\n");
-//        sb.append("Class Method: ").append(joinPoint.getSignature()).append("\n");
         return sb;
     }
     
@@ -92,7 +95,7 @@ public class AspectLog {
         try (FileWriter writer = new FileWriter(filePath, true)) {
             writer.write(content);
         } catch (IOException e) {
-            log.error("写入日志文件失败: " + e.getMessage());
+            log.error("写入日志文件失败: {}", e.getMessage());
         }
     }
 }

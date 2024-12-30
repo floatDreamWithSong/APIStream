@@ -1,9 +1,11 @@
 package com.daydreamer.apistream.interceptor;
 
+import com.daydreamer.apistream.common.KeyPath;
 import com.daydreamer.apistream.configuration.SDKConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -20,40 +22,32 @@ import java.util.Date;
 public class SDKInterceptor implements HandlerInterceptor {
 
     private boolean isSDKService(String path){
-        return switch (path) {
-            case "/APIStreamModuleServiceSDK", "/APIStreamModuleDetailQueryService", "/APIStreamModuleQueryService",
-                 "/APIStreamProjectQueryService" -> true;
-            default -> false;
-        };
+        for(String url : KeyPath.keyUrls){
+            if(path.startsWith(url)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        // 浏览器的预检请求直接放行
+    public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
         if(HttpMethod.OPTIONS.toString().equals(request.getMethod())) {
             return true;
         }
-
         boolean flag = true;
-        // 记录请求开始时间
         long startTime = System.currentTimeMillis();
         request.setAttribute("requestStartTime", startTime);
 
         if(log.isDebugEnabled()) {
             if (handler instanceof ResourceHttpRequestHandler) {
-                log.debug("preHandle:这是一个静态资源方法！");
+                log.debug("preHandle:这是一个静态资源！");
             } else if (handler instanceof HandlerMethod handlerMethod) {
                 String ip = request.getRemoteAddr();
                 Method method = handlerMethod.getMethod();
                 log.debug("用户IP:{},访问目标:{}.{}", ip, method.getDeclaringClass().getName(), method.getName());
             }
         }
-//        User user = (User) request.getSession().getAttribute("user");
-//        if (null == user) {
-//            //重定向到登录页面
-//            response.sendRedirect("toLogin");
-//            flag = false;
-//        }
         String path = request.getRequestURI();
         if(isSDKService(path)) {
             String userToken = request.getHeader("Authorization");
@@ -66,21 +60,19 @@ public class SDKInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
+    public void postHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler, ModelAndView modelAndView) {
         if (handler instanceof ResourceHttpRequestHandler) {
             if (log.isDebugEnabled()) {
                 log.debug("postHandle:这是一个静态资源访问！");
             }
         } else if (handler instanceof HandlerMethod) {
-//            HandlerMethod handlerMethod = (HandlerMethod) handler;
-//            Method method = handlerMethod.getMethod();
             long startTime = (long) request.getAttribute("requestStartTime");
             long endTime = System.currentTimeMillis();
             long executeTime = endTime - startTime;
             int time = 100;
             String path = request.getRequestURI();
             if(isSDKService(path)){
-                    log.info("<{}> 部署耗时 : {}ms, 完成时间 : {}", path, executeTime, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(endTime)));
+                    log.info("<{}> 耗时 : {}ms, 完成时间 : {}", path, executeTime, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(endTime)));
                     return;
             }
             if (executeTime > time) {

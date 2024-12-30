@@ -13,38 +13,21 @@ import org.springframework.web.bind.annotation.*;
 public class WebController {
     private WebService webService;
 
-    /**
-     * 查询项目列表
-     * TODO
-     * @return
-     */
     @CrossOrigin(origins = "*")
     @GetMapping("/APIStreamProjectQueryService")
     public UniResponse queryProject() {
         return webService.queryProject();
     }
 
-    /**
-     * 查询模块列表
-     * TODO
-     * @param projectId
-     * @return
-     */
     @CrossOrigin(origins = "*")
     @GetMapping("/APIStreamModuleQueryService")
-    public UniResponse queryModule(@RequestParam(name = "project_id", required = true) String projectId) {
+    public UniResponse queryModule(@RequestParam(name = "project_id") String projectId) {
         return webService.queryModule(projectId);
     }
 
-    /**
-     * 查询模块详情
-     * TODO
-     * @param moduleId
-     * @return
-     */
     @CrossOrigin(origins = "*")
     @GetMapping("/APIStreamModuleDetailQueryService")
-    public UniResponse queryModuleDetail(@RequestParam(name = "module_id", required = true) String moduleId) {
+    public UniResponse queryModuleDetail(@RequestParam(name = "module_id") String moduleId) {
         return webService.queryModuleDetail(moduleId);
     }
 

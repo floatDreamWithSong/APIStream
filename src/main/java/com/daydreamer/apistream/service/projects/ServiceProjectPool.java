@@ -2,18 +2,14 @@ package com.daydreamer.apistream.service.projects;
 
 import com.daydreamer.apistream.common.JsonProcessor;
 import com.daydreamer.apistream.common.ModulePath;
-import com.daydreamer.apistream.common.modules.ResolvedPath;
 import com.daydreamer.apistream.common.modules.ServiceArgument;
-import com.daydreamer.apistream.common.modules.ServiceFunction;
-import com.daydreamer.apistream.common.modules.ServiceModule;
 import com.daydreamer.apistream.common.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
+import com.daydreamer.apistream.common.modules.ServiceModule;
+import com.daydreamer.apistream.entity.APIStreamModuleEntity;
 import com.daydreamer.apistream.mapper.APIStreamModuleMapper;
 import com.daydreamer.apistream.mapper.ApiStreamProjectMapper;
-import com.daydreamer.apistream.service.oss.Uploader;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import com.daydreamer.apistream.service.oss.MinioWorker;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,56 +22,52 @@ import java.util.UUID;
 public class ServiceProjectPool {
     private static ApiStreamProjectMapper apiStreamProjectMapper;
     private static APIStreamModuleMapper apiStreamModuleMapper;
-    private static Uploader uploader;
+    private static MinioWorker minioWorker;
     @Autowired
     public void setApiStreamProjectMapper(ApiStreamProjectMapper apiStreamProjectMapper) {
-        this.apiStreamProjectMapper = apiStreamProjectMapper;
+        ServiceProjectPool.apiStreamProjectMapper = apiStreamProjectMapper;
     }
     @Autowired
     public void setApiStreamModuleMapper(APIStreamModuleMapper apiStreamModuleMapper) {
-        this.apiStreamModuleMapper = apiStreamModuleMapper;
+        ServiceProjectPool.apiStreamModuleMapper = apiStreamModuleMapper;
     }
 
     @Autowired
-    public void setUploader(Uploader uploader) {
-        this.uploader = uploader;
+    public void setUploader(MinioWorker minioWorker) {
+        ServiceProjectPool.minioWorker = minioWorker;
     }
 
     public final static ServiceProjectPool instance = new ServiceProjectPool();
     private final static HashMap<String, ServiceProject> projects = new HashMap<>();
-    /**
-     * 注册项目
-     * @param projectName
-     * @return
-     */
+
     public void createProject(String projectName) {
         ServiceProject project = new ServiceProject(projectName);
         projects.put(projectName, project);
     }
-    /**
-     * 移除项目
-     * @param projectName
-     */
+
     public void removeProject(String projectName) {
         if (projects.containsKey(projectName)) {
             ServiceProject project = projects.get(projectName);
             project.modules.forEach((key, value) -> {
-                uploader.delete(value.getId().toString()+".json");
+                minioWorker.delete(value.getId().toString()+".json");
                 apiStreamModuleMapper.deleteById(value.getId().toString());
+            });
+            project.disabledModules.forEach((key, value) -> {
+                minioWorker.delete(value.toString()+".json");
+                apiStreamModuleMapper.deleteById(value.toString());
             });
             apiStreamProjectMapper.deleteById(projectName);
             projects.remove(projectName);
         }
     }
-    /**
-     * 向项目中添加服务模块
-     * @param projectName
-     * @param json
-     * @return
-     */
+
     public UUID insertModule(String projectName, AddModuleServiceSDKJsonEntity json) {
         UUID uuid = UUID.randomUUID();
-        uploader.uploadString(JsonProcessor.gson.toJson(json),uuid.toString());
+        minioWorker.uploadString(JsonProcessor.gson.toJson(json),uuid.toString());
+        APIStreamModuleEntity moduleEntity = new APIStreamModuleEntity();
+        moduleEntity.setId(uuid.toString());
+        moduleEntity.setDisabled(false);
+        apiStreamModuleMapper.insert(moduleEntity);
         projects.get(projectName).createModule(json, uuid);
         return uuid;
     }
@@ -92,6 +84,14 @@ public class ServiceProjectPool {
         if (!project.hasModule(modulePath)) {
             return false;
         }
+        ServiceModule module = project.modules.get(modulePath);
+        APIStreamModuleEntity moduleEntity = new APIStreamModuleEntity();
+        moduleEntity.setId(module.getId().toString());
+        moduleEntity.setDisabled(true);
+        if(apiStreamModuleMapper.updateById(moduleEntity)==0){
+            log.error("更新模块状态失败");
+            return false;
+        }
         project.disableModule(modulePath);
         return true;
     }
@@ -105,36 +105,46 @@ public class ServiceProjectPool {
             log.error("模块已存在");
             return false;
         }
-        if(!project.hasDisabledMoudle(modulePath)){
+        if(!project.hasDisabledModule(modulePath)){
             log.error("模块不在禁用列表中");
             return false;
         }
         UUID uuid = project.getDisabledModuleId(modulePath);
-        if (!uploader.existJson(uuid.toString())){
+        if (!minioWorker.existJson(uuid.toString())){
             log.error("模块不存在bucket中");
             return false;
         }
-        AddModuleServiceSDKJsonEntity json = JsonProcessor.gson.fromJson(uploader.getString(uuid.toString()), AddModuleServiceSDKJsonEntity.class);
+        APIStreamModuleEntity moduleEntity = new APIStreamModuleEntity();
+        moduleEntity.setId(uuid.toString());
+        moduleEntity.setDisabled(false);
+        apiStreamModuleMapper.updateById(moduleEntity);
+        AddModuleServiceSDKJsonEntity json = JsonProcessor.gson.fromJson(minioWorker.getString(uuid.toString()), AddModuleServiceSDKJsonEntity.class);
         project.createModule(json, uuid);
         return true;
     }
 
-    public void removeModule(String projectName, String modulePath) {
+    public boolean removeModule(String projectName, String modulePath) {
         if (!projects.containsKey(projectName))
-            return;
+            return false;
         ServiceProject project = projects.get(projectName);
-        project.removeModule(modulePath);
+        UUID moduleId = project.getDisabledModuleId(modulePath);
+        if (moduleId != null){
+            minioWorker.delete(moduleId+".json");
+            apiStreamModuleMapper.deleteById(moduleId.toString());
+            project.removeDisabledModule(modulePath);
+            return false;
+        }
+        ServiceModule module = project.removeModule(modulePath);
+        if(module == null){
+            log.warn("模块不存在");
+            return false;
+        }
+        minioWorker.delete(module.getId().toString()+".json");
+        apiStreamModuleMapper.deleteById(module.getId().toString());
         project.removeDisabledModule(modulePath);
+        return true;
     }
 
-    /**
-     * 调用指定项目的服务模块下的服务函数
-     * @param projectName
-     * @param modulePath
-     * @param fnName
-     * @param args
-     * @return
-     */
     public String callModule(String projectName, String modulePath, String fnName, ArrayList<ServiceArgument> args) {
         return projects.get(projectName).callService(modulePath,fnName,args );
     }
@@ -149,8 +159,5 @@ public class ServiceProjectPool {
         return projects.containsKey(projectName);
     }
 
-    public ServiceProject getProject(String projectName) {
-        return projects.get(projectName);
-    }
 }
 

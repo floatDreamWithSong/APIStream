@@ -1,15 +1,10 @@
 package com.daydreamer.apistream.service;
 
-import com.daydreamer.apistream.common.modules.ServiceModule;
 import com.daydreamer.apistream.controller.interfaces.WebService;
 import com.daydreamer.apistream.common.dto.response.ListItem;
 import com.daydreamer.apistream.common.dto.response.ModuleDetail;
 import com.daydreamer.apistream.common.dto.response.UniResponse;
-import com.daydreamer.apistream.entity.APIStreamModuleEntity;
-import com.daydreamer.apistream.mapper.APIStreamModuleMapper;
-import com.daydreamer.apistream.mapper.ApiStreamProjectMapper;
 import com.daydreamer.apistream.service.projects.ServiceProjectPool;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,30 +12,16 @@ import java.util.List;
 @Service
 public class WebServiceImpl implements WebService {
 
-    /**
-     * TODO
-     * @return
-     */
     @Override
     public UniResponse<List<ListItem>> queryProject() {
         return null;
     }
 
-    /**
-     * todo
-     * @param projectId
-     * @return
-     */
     @Override
     public UniResponse<List<ListItem>> queryModule(String projectId) {
         return null;
     }
 
-    /**
-     * TODO
-     * @param moduleId
-     * @return
-     */
     @Override
     public UniResponse<ModuleDetail> queryModuleDetail(String moduleId) {
         return null;

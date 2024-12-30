@@ -14,14 +14,7 @@ import java.util.Map;
 @Slf4j
 public class ServiceController {
     private UseService useServiceModule;
-    /**
-     * 用于模块调用的服务接口，只负责调用模块并返回计算结果
-     * 状态：已完成
-     * @param request
-     * @param body
-     * @param dynamic_path
-     * @return
-     */
+
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/{dynamic_path:^(?!APIStreamModuleServiceSDK|APIStreamStaticResources).*}/**")
     public String handlePostRequest(HttpServletRequest request, @RequestBody Map<String, Object> body, @PathVariable String dynamic_path) {

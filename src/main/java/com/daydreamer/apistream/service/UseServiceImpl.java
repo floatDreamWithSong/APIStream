@@ -28,6 +28,6 @@ public class UseServiceImpl implements UseService {
             }
             return ServiceProjectPool.instance.callModule(_path.projectName,_path.modulePath,_path.functionName, args);
         }
-        return "";
+        return null;
     }
 }

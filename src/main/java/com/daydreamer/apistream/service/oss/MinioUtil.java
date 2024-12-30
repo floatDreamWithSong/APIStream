@@ -111,7 +111,7 @@ public class MinioUtil {
     }
 
     /**
-     * 获取文件访问地址（有过期时间）
+     * 获取临时文件访问地址（有过期时间）
      *
      * @param fileName 文件名称
      * @param time     时间
@@ -130,11 +130,6 @@ public class MinioUtil {
         return null;
     }
 
-    /**
-     * 获取文件访问地址
-     *
-     * @param fileName 文件名称
-     */
     public String getFileUrl(String fileName) {
         try {
             return minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
@@ -177,11 +172,6 @@ public class MinioUtil {
         }
     }
 
-    /**
-     * 删除文件
-     *
-     * @param fileName 文件名称
-     */
     public void delete(String fileName) {
         try {
             minioClient.removeObject(RemoveObjectArgs.builder().bucket(configuration.getBucketName()).object(fileName).build());
@@ -191,7 +181,7 @@ public class MinioUtil {
     }
 
     public boolean existsJson(String fileName) {
-        log.info("checking json file: {}.json", fileName);
+        log.debug("checking json file: {}.json", fileName);
         try {
             StatObjectArgs statObjectArgs = StatObjectArgs.builder()
                     .bucket(configuration.getBucketName())

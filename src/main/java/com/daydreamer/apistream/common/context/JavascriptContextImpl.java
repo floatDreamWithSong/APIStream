@@ -18,10 +18,10 @@ public class JavascriptContextImpl implements JavascriptContext {
     private BlockingQueue<JavascriptContextCore> availableContext = new LinkedBlockingQueue<>();
 
     public JavascriptContextImpl(Integer MaxConcurrent, String functionCode) {
-        setServiceFunction(MaxConcurrent, functionCode);
+        setService(MaxConcurrent, functionCode);
     }
     @Override
-    public String callServiceFunction(String evalStatement) {
+    public String callService(String evalStatement) {
         log.debug(evalStatement);
         ServiceResult serviceResult = new ServiceResult();
         JavascriptContextCore core = null;
@@ -39,11 +39,11 @@ public class JavascriptContextImpl implements JavascriptContext {
                 log.error("执行错误:{}", e.getMessage());
             } finally {
                 serviceResult.consoleOutput = outputStream.toString();
-                log.info("执行结果: {} 控制台输出:{}", res, outputStream.toString());
+                log.info("执行结果: {} 控制台输出:{}", res, outputStream);
                 outputStream.reset();
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         String resp = JsonProcessor.gson.toJson(serviceResult);
         if (core!=null)
@@ -52,7 +52,7 @@ public class JavascriptContextImpl implements JavascriptContext {
     }
 
     @Override
-    public void setServiceFunction (Integer MaxConcurrent, String functionCode) {
+    public void setService(Integer MaxConcurrent, String functionCode) {
         log.debug("MaxConcurrent: {}", MaxConcurrent);
         log.debug("\nfunctionCode:\n {}", functionCode);
         this.availableContext = new LinkedBlockingQueue<>();

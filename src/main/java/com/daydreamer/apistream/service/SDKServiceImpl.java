@@ -1,7 +1,6 @@
 package com.daydreamer.apistream.service;
 
 import com.daydreamer.apistream.common.modules.ResolvedPath;
-import com.daydreamer.apistream.common.modules.ServiceModule;
 import com.daydreamer.apistream.controller.interfaces.SDKService;
 import com.daydreamer.apistream.common.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
 import com.daydreamer.apistream.common.dto.response.UniResponse;
@@ -9,7 +8,6 @@ import com.daydreamer.apistream.entity.APIStreamModuleEntity;
 import com.daydreamer.apistream.entity.ApiStreamProjectEntity;
 import com.daydreamer.apistream.mapper.APIStreamModuleMapper;
 import com.daydreamer.apistream.mapper.ApiStreamProjectMapper;
-import com.daydreamer.apistream.service.projects.ServiceProject;
 import com.daydreamer.apistream.service.projects.ServiceProjectPool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +21,8 @@ import static com.daydreamer.apistream.common.ModulePath.resolvePath;
 @Service
 public class SDKServiceImpl implements SDKService {
 
-    private ApiStreamProjectMapper apiStreamProjectMapper;
-    private APIStreamModuleMapper apiStreamModuleMapper;
+    private final ApiStreamProjectMapper apiStreamProjectMapper;
+    private final APIStreamModuleMapper apiStreamModuleMapper;
     @Autowired
     public SDKServiceImpl(ApiStreamProjectMapper apiStreamProjectMapper, APIStreamModuleMapper apiStreamModuleMapper) {
         this.apiStreamProjectMapper = apiStreamProjectMapper;
@@ -40,10 +38,6 @@ public class SDKServiceImpl implements SDKService {
             return new UniResponse<>(1, msg);
         }
         UUID id = ServiceProjectPool.instance.insertModule(_path.projectName, json);
-        APIStreamModuleEntity moduleEntity = new APIStreamModuleEntity();
-        moduleEntity.setId(id.toString());
-        moduleEntity.setDisabled(false);
-        apiStreamModuleMapper.insert(moduleEntity);
         String msg = "deploy module success : "+json.path;
         log.info(msg);
         return new UniResponse<>(0, msg);

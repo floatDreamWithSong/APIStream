@@ -7,20 +7,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Component
-public class Uploader {
+public class MinioWorker {
 
     private final MinioUtil minioUtil;
 
-    public Uploader(MinioUtil minioUtil) {
+    public MinioWorker(MinioUtil minioUtil) {
         this.minioUtil = minioUtil;
     }
     public Boolean existJson(String fileName) {
         return minioUtil.existsJson(fileName);
     }
 
-    /**
-     * 上传文件
-     */
     public void uploadReport(MultipartFile file, String name) {
             minioUtil.upload(file, name);
     }
@@ -28,25 +25,17 @@ public class Uploader {
         minioUtil.upload(content, name);
     }
 
-    /**
-     * 预览文件
-     */
     public String preview(String fileName) {
         return minioUtil.getFileUrl(fileName);
     }
     public String getString(String fileName) {
         return minioUtil.getString(fileName);
     }
-    /**
-     * 下载文件
-     */
+
     public void download(String fileName, HttpServletResponse response) {
         minioUtil.download(response, fileName);
     }
 
-    /**
-     * 删除文件
-     */
     public void delete(String fileName) {
         minioUtil.delete(fileName);
     }

@@ -13,11 +13,11 @@ public class SystemSQLRunner {
         result.sql = sql;
         try {
             switch (type) {
-                case SELECTONE -> result.result = SqlRunner.db().selectOne(sql);
+                case SELECT_ONE -> result.result = SqlRunner.db().selectOne(sql);
                 case SELECT -> result.result = SqlRunner.db().selectList(sql);
-                case SELECTCOUNT -> result.result = SqlRunner.db().selectCount(sql);
-                case SELECTOBJ -> result.result = SqlRunner.db().selectObj(sql);
-                case SELECTOBJS -> result.result = SqlRunner.db().selectObjs(sql);
+                case SELECT_COUNT -> result.result = SqlRunner.db().selectCount(sql);
+                case SELECT_OBJ -> result.result = SqlRunner.db().selectObj(sql);
+                case SELECT_OBJS -> result.result = SqlRunner.db().selectObjs(sql);
             }
         } catch (Exception e) {
             String err = e.getMessage();
@@ -28,20 +28,14 @@ public class SystemSQLRunner {
     }
 
     public String selectOne(String sql) {
-        return selectableSql(SelectableSQLType.SELECTONE, sql);
+        return selectableSql(SelectableSQLType.SELECT_ONE, sql);
     }
     public String selectList(String sql) {
         return selectableSql(SelectableSQLType.SELECT, sql);
     }
     public String selectCount(String sql) {
-        return selectableSql(SelectableSQLType.SELECTCOUNT, sql);
+        return selectableSql(SelectableSQLType.SELECT_COUNT, sql);
     }
-//    public String selectObj(String sql) {
-//        return selectableSql(SelectableSQLType.SELECTOBJ, sql);
-//    }
-//    public String selectObjs(String sql) {
-//        return selectableSql(SelectableSQLType.SELECTOBJS, sql);
-//    }
 
 
     public String execSql(String sql) {

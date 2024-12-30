@@ -7,7 +7,7 @@ import com.daydreamer.apistream.entity.APIStreamModuleEntity;
 import com.daydreamer.apistream.entity.ApiStreamProjectEntity;
 import com.daydreamer.apistream.mapper.APIStreamModuleMapper;
 import com.daydreamer.apistream.mapper.ApiStreamProjectMapper;
-import com.daydreamer.apistream.service.oss.Uploader;
+import com.daydreamer.apistream.service.oss.MinioWorker;
 import com.daydreamer.apistream.service.projects.ServiceProjectPool;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
@@ -24,12 +24,12 @@ import java.util.UUID;
 public class ApiStreamApplication {
     private static ApiStreamProjectMapper apiStreamProjectMapper;
     private static APIStreamModuleMapper apiStreamModuleMapper;
-    private static Uploader uploader;
+    private static MinioWorker minioWorker;
     @Autowired
-    public ApiStreamApplication(APIStreamModuleMapper apiStreamModuleMapper, ApiStreamProjectMapper apiStreamProjectMapper, Uploader uploader) {
-        this.apiStreamModuleMapper = apiStreamModuleMapper;
-        this.apiStreamProjectMapper = apiStreamProjectMapper;
-        this.uploader = uploader;
+    public ApiStreamApplication(APIStreamModuleMapper apiStreamModuleMapper, ApiStreamProjectMapper apiStreamProjectMapper, MinioWorker minioWorker) {
+        ApiStreamApplication.apiStreamModuleMapper = apiStreamModuleMapper;
+        ApiStreamApplication.apiStreamProjectMapper = apiStreamProjectMapper;
+        ApiStreamApplication.minioWorker = minioWorker;
     }
 
     public static void main(String[] args) {
@@ -37,19 +37,19 @@ public class ApiStreamApplication {
         for(int i=0;i<args.length;i++) {
             if(args[i].equals("--key") && i+1<args.length) {
                 SDKConfig.sdkToken = args[++i];
-                log.info("重新启动 SDK token: " + SDKConfig.sdkToken);
+                log.debug("load SDK token: {}", SDKConfig.sdkToken);
             }
         }
         SpringApplication.run(ApiStreamApplication.class, args);
         List<ApiStreamProjectEntity> projects = apiStreamProjectMapper.selectList(null);
         for(ApiStreamProjectEntity project : projects) {
             ServiceProjectPool.instance.createProject(project.getProjectName());
-            log.info("恢复项目: " + project.getProjectName());
+            log.debug("recreate project: {}", project.getProjectName());
         }
         List<APIStreamModuleEntity> modules = apiStreamModuleMapper.selectList(null);
         for(APIStreamModuleEntity module : modules) {
-            if(uploader.existJson(module.getId().toString())){
-                AddModuleServiceSDKJsonEntity json = JsonProcessor.gson.fromJson(uploader.getString(module.getId().toString()), AddModuleServiceSDKJsonEntity.class);
+            if(minioWorker.existJson(module.getId())){
+                AddModuleServiceSDKJsonEntity json = JsonProcessor.gson.fromJson(minioWorker.getString(module.getId()), AddModuleServiceSDKJsonEntity.class);
                 ServiceProjectPool.instance.reCoverModule(json, UUID.fromString(module.getId()), module.isDisabled());
             }
         }

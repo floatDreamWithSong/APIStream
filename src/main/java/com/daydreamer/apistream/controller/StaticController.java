@@ -74,7 +74,7 @@ public class StaticController {
                     .body(resource);
             }
         } catch (Exception e) {
-            log.error("下载文件失败: {}", e.getMessage());
+            log.error("download failed : {}", e.getMessage());
         }
         return ResponseEntity.notFound().build();
     }
