@@ -67,8 +67,8 @@ public class AspectLog {
         long executionTime = endTime - startTime;
         // 记录请求信息
         String logContent = createLogContent(request)
-                .append("Execution Time: ").append(executionTime).append(" ms\n")
-                .append("Function Args: ").append(functionArgs).append("\n")
+                .append("ExecutionTime: ").append(executionTime).append(" ms\n")
+                .append("FunctionArgs: ").append(functionArgs).append("\n")
                 .append("Result: ").append(result.toString()).append("\n\n").toString();
         
         // 写入日志文件
