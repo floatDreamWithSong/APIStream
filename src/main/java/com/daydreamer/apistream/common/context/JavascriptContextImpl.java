@@ -2,6 +2,7 @@ package com.daydreamer.apistream.common.context;
 
 import com.daydreamer.apistream.common.JsonProcessor;
 import com.daydreamer.apistream.common.dto.response.ServiceResult;
+import com.daydreamer.apistream.common.systemcall.SystemSQLRunner;
 import lombok.extern.slf4j.Slf4j;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
@@ -58,6 +59,7 @@ public class JavascriptContextImpl implements JavascriptContext {
         this.MaxConcurrent = MaxConcurrent;
         for (int i = 0; i < MaxConcurrent; i++) {
             JavascriptContextCore core = new JavascriptContextCore();
+            core.context.getBindings("js").putMember("DataBase", new SystemSQLRunner());
             core.context.eval("js", functionCode);
             this.availableContext.add(core);
         }

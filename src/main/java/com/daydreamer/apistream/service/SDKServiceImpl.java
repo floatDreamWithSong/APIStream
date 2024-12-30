@@ -1,6 +1,7 @@
 package com.daydreamer.apistream.service;
 
 import com.daydreamer.apistream.common.modules.ResolvedPath;
+import com.daydreamer.apistream.common.modules.ServiceModule;
 import com.daydreamer.apistream.controller.interfaces.SDKService;
 import com.daydreamer.apistream.common.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
 import com.daydreamer.apistream.common.dto.response.UniResponse;
@@ -8,6 +9,7 @@ import com.daydreamer.apistream.entity.APIStreamModuleEntity;
 import com.daydreamer.apistream.entity.ApiStreamProjectEntity;
 import com.daydreamer.apistream.mapper.APIStreamModuleMapper;
 import com.daydreamer.apistream.mapper.ApiStreamProjectMapper;
+import com.daydreamer.apistream.service.projects.ServiceProject;
 import com.daydreamer.apistream.service.projects.ServiceProjectPool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,9 +64,8 @@ public class SDKServiceImpl implements SDKService {
         if(!ServiceProjectPool.instance.hasProject(projectName)){
             return new UniResponse<>(1, "project not exist");
         }
-        apiStreamProjectMapper.deleteById(projectName);
-        log.info("remove project success : {}", projectName);
         ServiceProjectPool.instance.removeProject(projectName);
+        log.info("remove project success : {}", projectName);
         return new UniResponse(0, "project removed");
     }
 

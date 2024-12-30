@@ -3,6 +3,7 @@ package com.daydreamer.apistream.service.oss;
 import io.minio.*;
 import io.minio.http.Method;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Component
 public class MinioUtil {
 
@@ -189,6 +191,7 @@ public class MinioUtil {
     }
 
     public boolean existsJson(String fileName) {
+        log.info("checking json file: {}.json", fileName);
         try {
             StatObjectArgs statObjectArgs = StatObjectArgs.builder()
                     .bucket(configuration.getBucketName())
@@ -197,6 +200,7 @@ public class MinioUtil {
             minioClient.statObject(statObjectArgs); // 如果文件存在，将不会抛出异常
             return true; // 文件存在
         } catch (Exception e) {
+            log.error("Error checking JSON file: {}", e.getMessage());
             return false; // 文件不存在或其他异常
         }
     }

@@ -30,18 +30,18 @@ public class SystemSQLRunner {
     public String selectOne(String sql) {
         return selectableSql(SelectableSQLType.SELECTONE, sql);
     }
-    public String select(String sql) {
+    public String selectList(String sql) {
         return selectableSql(SelectableSQLType.SELECT, sql);
     }
     public String selectCount(String sql) {
         return selectableSql(SelectableSQLType.SELECTCOUNT, sql);
     }
-    public String selectObj(String sql) {
-        return selectableSql(SelectableSQLType.SELECTOBJ, sql);
-    }
-    public String selectObjs(String sql) {
-        return selectableSql(SelectableSQLType.SELECTOBJS, sql);
-    }
+//    public String selectObj(String sql) {
+//        return selectableSql(SelectableSQLType.SELECTOBJ, sql);
+//    }
+//    public String selectObjs(String sql) {
+//        return selectableSql(SelectableSQLType.SELECTOBJS, sql);
+//    }
 
 
     public String execSql(String sql) {

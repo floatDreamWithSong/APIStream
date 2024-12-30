@@ -31,5 +31,5 @@ logging:
 minio:
   access-key: 1rFgaZJgyyrCgWyzsMYy
   secret-key: mzMiZ5qyVdmsCODPf90As2oHE3Juwrf3eQFOI2i7
-  url: http://192.168.31.75:9000
+  url: http://127.0.0.1:9000
   bucket-name: public
