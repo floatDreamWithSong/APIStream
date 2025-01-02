@@ -60,22 +60,20 @@ public class WebServiceImpl implements WebService {
 
     @Override
     public UniResponse<ModuleDetail> queryModuleDetail(String moduleId) {
-        // 1. 查询模块基本信息
         APIStreamModuleEntity module = apiStreamModuleMapper.selectById(moduleId);
         if (module == null) {
             return new UniResponse<>(1, "module not found", null);
         }
 
-        // 2. 查询模块详细信息(需要添加ModuleDetailMapper)
         ModuleDetailEntity moduleDetail = moduleDetailMapper.selectById(moduleId);
         if (moduleDetail == null) {
             return new UniResponse<>(1, "module detail not found", null);
         }
 
-        // 3. 查询该模块的所有API接口(需要添加ApiEndpointMapper)
-        List<ApiEndpointEntity> endpoints = apiEndpointMapper.selectByModuleId(moduleId);
+        QueryWrapper<ApiEndpointEntity> wrapper = new QueryWrapper<>();
+        wrapper.eq("module_id", moduleId);
+        List<ApiEndpointEntity> endpoints = apiEndpointMapper.selectList(wrapper);
 
-        // 4. 组装ModuleDetail对象
         ModuleDetail detail = new ModuleDetail();
         detail.setId(moduleId);
         detail.setName(moduleDetail.getName());
@@ -103,18 +101,48 @@ public class WebServiceImpl implements WebService {
 
     @Override
     public UniResponse<Boolean> disableModule(String modulePath, String projectName) {
-        if(!ServiceProjectPool.instance.disableModule(modulePath, projectName)){
-            return new UniResponse<>(1, "disable module failed", false);
+        try {
+            QueryWrapper<APIStreamModuleEntity> wrapper = new QueryWrapper<>();
+            wrapper.eq("path", modulePath)
+                    .eq("project_name", projectName);
+
+            APIStreamModuleEntity module = apiStreamModuleMapper.selectOne(wrapper);
+            if (module == null) {
+                return new UniResponse<>(1, "module not found", false);
+            }
+
+            module.setDisabled(true);
+            apiStreamModuleMapper.updateById(module);
+
+            log.info("Module disabled: {} in project {}", modulePath, projectName);
+            return new UniResponse<>(0, "disable module success", true);
+        } catch (Exception e) {
+            log.error("Failed to disable module", e);
+            return new UniResponse<>(1, "disable module failed: " + e.getMessage(), false);
         }
-        return new UniResponse<>(0, "disable module success", true);
     }
 
     @Override
     public UniResponse<Boolean> enableModule(String modulePath, String projectName) {
-        if(!ServiceProjectPool.instance.enableModule(modulePath, projectName)){
-            return new UniResponse<>(1, "enable module failed", false);
+        try {
+            QueryWrapper<APIStreamModuleEntity> wrapper = new QueryWrapper<>();
+            wrapper.eq("path", modulePath)
+                    .eq("project_name", projectName);
+
+            APIStreamModuleEntity module = apiStreamModuleMapper.selectOne(wrapper);
+            if (module == null) {
+                return new UniResponse<>(1, "module not found", false);
+            }
+
+            module.setDisabled(false);
+            apiStreamModuleMapper.updateById(module);
+
+            log.info("Module enabled: {} in project {}", modulePath, projectName);
+            return new UniResponse<>(0, "enable module success", true);
+        } catch (Exception e) {
+            log.error("Failed to enable module", e);
+            return new UniResponse<>(1, "enable module failed: " + e.getMessage(), false);
         }
-        return new UniResponse<>(0, "enable module success", true);
     }
 
     @Override
