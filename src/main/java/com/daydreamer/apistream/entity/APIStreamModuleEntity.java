@@ -10,4 +10,8 @@ public class APIStreamModuleEntity {
     @TableId
     private String id;
     private boolean isDisabled;
+    private long totalCallTimes;
+    private int avgRuntime;
+    private int maxRuntime;
+    private int minRuntime;
 }
