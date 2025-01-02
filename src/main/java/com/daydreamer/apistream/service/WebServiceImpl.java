@@ -1,8 +1,6 @@
 package com.daydreamer.apistream.service;
 
 import com.daydreamer.apistream.controller.interfaces.WebService;
-import com.daydreamer.apistream.common.dto.response.ListItem;
-import com.daydreamer.apistream.common.dto.response.ModuleDetail;
 import com.daydreamer.apistream.common.dto.response.UniResponse;
 import com.daydreamer.apistream.entity.APIStreamModuleEntity;
 import com.daydreamer.apistream.entity.ApiStreamProjectEntity;
@@ -34,11 +32,6 @@ public class WebServiceImpl implements WebService {
     @Override
     public UniResponse<List<APIStreamModuleEntity>> queryModule(String projectId) {
         return new UniResponse<>(0, "query module success", apiStreamModuleMapper.selectList(null));
-    }
-
-    @Override
-    public UniResponse<ModuleDetail> queryModuleDetail(String moduleId) {
-        return null;
     }
 
     @Override

@@ -27,11 +27,6 @@ class ApiStreamApplicationTests {
         System.out.println(("----- selectAll method test ------"));
         List<User> userList = userMapper.selectList(null);
         userList.forEach(System.out::println);
-//        User user = new User();
-//        user.setName("张三goubawanyi");
-//        user.setAge(18);
-//        user.setEmail("123@qq.com");
-//        userMapper.insert(user);
         userList = userMapper.selectList(null);
         userList.forEach(System.out::println);
     }

@@ -25,12 +25,6 @@ public class WebController {
         return webService.queryModule(projectId);
     }
 
-//    @CrossOrigin(origins = "*")
-    ////    @GetMapping("/APIStreamModuleDetailQueryService")
-    ////    public UniResponse queryModuleDetail(@RequestParam(name = "module_id") String moduleId) {
-    ////        return webService.queryModuleDetail(moduleId);
-    ////    }
-
     @CrossOrigin(origins = "*")
     @PostMapping("/APIStreamModuleDisableService")
     public UniResponse disableModule(@RequestBody DisableAndEnableJson disableAndEnableJson) {

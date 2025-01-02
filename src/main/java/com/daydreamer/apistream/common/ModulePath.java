@@ -3,8 +3,26 @@ package com.daydreamer.apistream.common;
 import com.daydreamer.apistream.common.modules.ResolvedPath;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static org.apache.commons.io.file.PathUtils.deleteDirectory;
+
 @Slf4j
 public class ModulePath {
+
+    public static boolean removeLog(String _path){
+        Path path = Paths.get("logs/"+_path);
+        try {
+            deleteDirectory(path);
+        } catch (IOException e) {
+            log.error("removeLog error", e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
     public static ResolvedPath resolvePath(String path){
         System.out.println(path);
         String modulePath;

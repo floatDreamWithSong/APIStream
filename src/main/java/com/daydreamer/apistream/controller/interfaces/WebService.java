@@ -22,13 +22,6 @@ public interface WebService {
      */
     UniResponse queryModule(String projectId);
 
-    /**
-     * 查询指定模块的详细信息
-     * @param moduleId
-     * @return
-     */
-    UniResponse queryModuleDetail(String moduleId);
-
     UniResponse<Boolean> disableModule(String modulePath, String projectName);
     UniResponse<Boolean> enableModule(String modulePath, String projectName);
 }

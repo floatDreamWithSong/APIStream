@@ -6,9 +6,21 @@ import org.graalvm.polyglot.Context;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static org.apache.commons.io.file.PathUtils.deleteDirectory;
+
 @Slf4j
 @SpringBootTest
 public class SystemCallTests {
+
+    @Test
+    public void testSystemCall() {
+
+    }
+
     @Test
     public void test() {
         log.info("test start");
