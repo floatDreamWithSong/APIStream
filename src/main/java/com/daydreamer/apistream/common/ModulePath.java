@@ -15,6 +15,13 @@ public class ModulePath {
     public static boolean removeLog(String _path){
         Path path = Paths.get("logs/"+_path);
         try {
+            if(!path.toFile().exists()){
+                return true;
+            }
+            if(path.toFile().isFile()){
+                path.toFile().delete();
+                return true;
+            }
             deleteDirectory(path);
         } catch (IOException e) {
             log.error("removeLog error", e.getMessage());

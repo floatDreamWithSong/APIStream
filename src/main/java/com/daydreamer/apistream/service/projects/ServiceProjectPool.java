@@ -67,6 +67,10 @@ public class ServiceProjectPool {
         APIStreamModuleEntity moduleEntity = new APIStreamModuleEntity();
         moduleEntity.setId(uuid.toString());
         moduleEntity.setDisabled(false);
+        moduleEntity.setAvgRuntime(0);
+        moduleEntity.setMaxRuntime(0);
+        moduleEntity.setMinRuntime(0);
+        moduleEntity.setTotalCallTimes(0);
         apiStreamModuleMapper.insert(moduleEntity);
         projects.get(projectName).createModule(json, uuid);
         return uuid;
@@ -142,6 +146,7 @@ public class ServiceProjectPool {
         minioWorker.delete(module.getId().toString()+".json");
         apiStreamModuleMapper.deleteById(module.getId().toString());
         project.removeDisabledModule(modulePath);
+        ModulePath.removeLog(projectName+modulePath+".log");
         return true;
     }
 
@@ -153,6 +158,12 @@ public class ServiceProjectPool {
         if (!projects.containsKey(projectName))
             return false;
         return projects.get(projectName).hasService(modulePath,fnName);
+    }
+
+    public UUID getModuleId(String projectName, String modulePath) {
+        if (!projects.containsKey(projectName))
+            return null;
+        return projects.get(projectName).getModuleId(modulePath);
     }
 
     public boolean hasProject(String projectName) {

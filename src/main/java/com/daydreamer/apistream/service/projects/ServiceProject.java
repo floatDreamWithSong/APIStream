@@ -33,6 +33,12 @@ public class ServiceProject {
     public boolean hasModule(String modulePath){
         return this.modules.containsKey(modulePath);
     }
+    public UUID getModuleId(String modulePath){
+        if(!this.modules.containsKey(modulePath)){
+            return null;
+        }
+        return this.modules.get(modulePath).getId();
+    }
     public UUID getDisabledModuleId(String modulePath){
         return this.disabledModules.get(modulePath);
     }

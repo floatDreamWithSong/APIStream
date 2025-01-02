@@ -11,7 +11,7 @@ public class APIStreamModuleEntity {
     private String id;
     private boolean isDisabled;
     private long totalCallTimes;
-    private int avgRuntime;
-    private int maxRuntime;
-    private int minRuntime;
+    private long avgRuntime;
+    private long maxRuntime;
+    private long minRuntime;
 }

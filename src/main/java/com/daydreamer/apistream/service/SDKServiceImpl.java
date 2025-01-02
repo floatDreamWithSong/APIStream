@@ -57,7 +57,7 @@ public class SDKServiceImpl implements SDKService {
     @Override
     public UniResponse removeProject(String projectName) {
         if(!ServiceProjectPool.instance.hasProject(projectName)){
-            return new UniResponse<>(1, "project not exist");
+            return new UniResponse<>(1, "project not exist", false);
         }
         ServiceProjectPool.instance.removeProject(projectName);
         File file = new File("logs/"+projectName);
@@ -65,12 +65,12 @@ public class SDKServiceImpl implements SDKService {
             file.delete();
         }
         if(ModulePath.removeLog(projectName)){
-            log.info("remove project success : {}", projectName);
+            log.debug("remove project success : {}", projectName);
         }
         else{
-            log.warn("remove project log fail : {}", projectName);
+            log.warn("remove project success but remove log failed : {}", projectName);
         }
-        return new UniResponse(0, "project removed");
+        return new UniResponse(0, "project removed", true);
     }
 
     @Override
