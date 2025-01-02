@@ -17,12 +17,13 @@ import com.daydreamer.apistream.mapper.ModuleDetailMapper;
 import com.daydreamer.apistream.service.projects.ServiceProjectPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
-
+@Slf4j
 @Service
 public class WebServiceImpl implements WebService {
 
@@ -114,5 +115,80 @@ public class WebServiceImpl implements WebService {
             return new UniResponse<>(1, "enable module failed", false);
         }
         return new UniResponse<>(0, "enable module success", true);
+    }
+
+    @Override
+    public UniResponse<Boolean> createModule(ModuleDetail moduleDetail) {
+        try {
+            // 1. Create and save module entity
+            APIStreamModuleEntity module = new APIStreamModuleEntity();
+            module.setId(UUID.randomUUID().toString());
+            module.setDisabled(false);
+            apiStreamModuleMapper.insert(module);
+
+            // 2. Create and save module detail
+            ModuleDetailEntity detail = new ModuleDetailEntity();
+            detail.setId(module.getId());
+            detail.setName(moduleDetail.getName());
+            detail.setDescription(moduleDetail.getDescription());
+            detail.setPath(moduleDetail.getPath());
+            detail.setProjectName(moduleDetail.getProjectName());
+            moduleDetailMapper.insert(detail);
+
+            // 3. Create and save endpoints
+            if (moduleDetail.getEndpoints() != null) {
+                moduleDetail.getEndpoints().forEach(endpoint -> {
+                    ApiEndpointEntity endpointEntity = new ApiEndpointEntity();
+                    endpointEntity.setId(UUID.randomUUID().toString());
+                    endpointEntity.setModuleId(module.getId());
+                    endpointEntity.setPath(endpoint.getPath());
+                    endpointEntity.setMethod(endpoint.getMethod());
+                    endpointEntity.setDescription(endpoint.getDescription());
+                    apiEndpointMapper.insert(endpointEntity);
+                });
+            }
+
+            return new UniResponse<>(0, "create module success", true);
+        } catch (Exception e) {
+            log.error("create module failed", e);
+            return new UniResponse<>(1, "create module failed: " + e.getMessage(), false);
+        }
+    }
+
+    @Override
+    public UniResponse<Boolean> updateModule(ModuleDetail moduleDetail) {
+        try {
+            // 1. Update module detail
+            ModuleDetailEntity detail = new ModuleDetailEntity();
+            detail.setId(moduleDetail.getId());
+            detail.setName(moduleDetail.getName());
+            detail.setDescription(moduleDetail.getDescription());
+            detail.setPath(moduleDetail.getPath());
+            detail.setProjectName(moduleDetail.getProjectName());
+            moduleDetailMapper.updateById(detail);
+
+            // 2. Delete existing endpoints
+            QueryWrapper<ApiEndpointEntity> wrapper = new QueryWrapper<>();
+            wrapper.eq("module_id", moduleDetail.getId());
+            apiEndpointMapper.delete(wrapper);
+
+            // 3. Create new endpoints
+            if (moduleDetail.getEndpoints() != null) {
+                moduleDetail.getEndpoints().forEach(endpoint -> {
+                    ApiEndpointEntity endpointEntity = new ApiEndpointEntity();
+                    endpointEntity.setId(UUID.randomUUID().toString());
+                    endpointEntity.setModuleId(moduleDetail.getId());
+                    endpointEntity.setPath(endpoint.getPath());
+                    endpointEntity.setMethod(endpoint.getMethod());
+                    endpointEntity.setDescription(endpoint.getDescription());
+                    apiEndpointMapper.insert(endpointEntity);
+                });
+            }
+
+            return new UniResponse<>(0, "update module success", true);
+        } catch (Exception e) {
+            log.error("update module failed", e);
+            return new UniResponse<>(1, "update module failed: " + e.getMessage(), false);
+        }
     }
 }
