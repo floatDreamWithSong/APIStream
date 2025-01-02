@@ -1,34 +1,49 @@
 package com.daydreamer.apistream.controller.interfaces;
 
-import com.daydreamer.apistream.common.dto.response.ListItem;
 import com.daydreamer.apistream.common.dto.response.ModuleDetail;
 import com.daydreamer.apistream.common.dto.response.UniResponse;
+import com.daydreamer.apistream.entity.APIStreamModuleEntity;
+import com.daydreamer.apistream.entity.ApiStreamProjectEntity;
 import java.util.List;
 
-/**
- * 用于打包在开发工具中的后台系统的控制器
- */
 public interface WebService {
-    /**
-     * 查询所有的项目列表
-     * @return
-     */
-    UniResponse queryProject();
+    // 明确返回类型为项目列表
+    UniResponse<List<ApiStreamProjectEntity>> queryProject();
 
-    /**
-     * 查询指定项目下的模块列表
-     * @param projectId
-     * @return
-     */
-    UniResponse queryModule(String projectId);
+    // 明确返回类型为模块列表
+    UniResponse<List<APIStreamModuleEntity>> queryModule(String projectId);
 
-    /**
-     * 查询指定模块的详细信息
-     * @param moduleId
-     * @return
-     */
-    UniResponse queryModuleDetail(String moduleId);
+    // 明确返回类型为模块详情
+    UniResponse<ModuleDetail> queryModuleDetail(String moduleId);
 
+    // 为方法添加JavaDoc注释
+    /**
+     * 禁用指定模块
+     * @param modulePath 模块路径
+     * @param projectName 项目名称
+     * @return 操作结果
+     */
     UniResponse<Boolean> disableModule(String modulePath, String projectName);
+
+    /**
+     * 启用指定模块
+     * @param modulePath 模块路径
+     * @param projectName 项目名称
+     * @return 操作结果
+     */
     UniResponse<Boolean> enableModule(String modulePath, String projectName);
+
+    /**
+     * 创建新模块
+     * @param moduleDetail 模块详情
+     * @return 操作结果
+     */
+    UniResponse<Boolean> createModule(ModuleDetail moduleDetail);
+
+    /**
+     * 更新现有模块
+     * @param moduleDetail 模块详情
+     * @return 操作结果
+     */
+    UniResponse<Boolean> updateModule(ModuleDetail moduleDetail);
 }
