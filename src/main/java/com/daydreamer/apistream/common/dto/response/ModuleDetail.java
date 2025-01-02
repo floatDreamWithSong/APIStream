@@ -1,11 +1,17 @@
 package com.daydreamer.apistream.common.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.util.List;
 
-@AllArgsConstructor
+@Data
 public class ModuleDetail {
-    public List<ListItem> functions;
-    public String log;
+    private String id;
+    private String name;
+    private String description;
+    private String path;
+    private boolean isDisabled;
+    private String projectName;
+    private List<ApiEndpoint> endpoints;
 }
