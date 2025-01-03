@@ -1,5 +1,6 @@
 package com.daydreamer.apistream.service.projects;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.daydreamer.apistream.common.JsonProcessor;
 import com.daydreamer.apistream.common.ModulePath;
 import com.daydreamer.apistream.common.modules.ServiceArgument;
@@ -107,10 +108,10 @@ public class ServiceProjectPool {
             return false;
         }
         ServiceModule module = project.modules.get(modulePath);
-        APIStreamModuleEntity moduleEntity = new APIStreamModuleEntity();
-        moduleEntity.setId(module.getId().toString());
-        moduleEntity.setDisabled(true);
-        if(apiStreamModuleMapper.updateById(moduleEntity)==0){
+        UpdateWrapper<APIStreamModuleEntity> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.set("is_disabled", true);
+        updateWrapper.eq("id", module.getId().toString());
+        if(apiStreamModuleMapper.update(updateWrapper)==0){
             log.error("更新模块状态失败");
             return false;
         }
@@ -135,11 +136,14 @@ public class ServiceProjectPool {
         if (!minioWorker.existJson(uuid.toString())){
             log.error("模块不存在bucket中");
             return false;
+        };
+        UpdateWrapper<APIStreamModuleEntity> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.set("is_disabled", false);
+        updateWrapper.eq("id", uuid.toString());
+        if(apiStreamModuleMapper.update(updateWrapper)==0){
+            log.error("更新模块状态失败");
+            return false;
         }
-        APIStreamModuleEntity moduleEntity = new APIStreamModuleEntity();
-        moduleEntity.setId(uuid.toString());
-        moduleEntity.setDisabled(false);
-        apiStreamModuleMapper.updateById(moduleEntity);
         AddModuleServiceSDKJsonEntity json = JsonProcessor.gson.fromJson(minioWorker.getString(uuid.toString()), AddModuleServiceSDKJsonEntity.class);
         project.createModule(json, uuid);
         return true;
