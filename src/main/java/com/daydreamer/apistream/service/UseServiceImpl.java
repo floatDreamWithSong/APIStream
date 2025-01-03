@@ -50,8 +50,8 @@ public class UseServiceImpl implements UseService {
             APIStreamModuleEntity lastModuleEntity = apiStreamModuleMapper.selectById(moduleId.toString());
             APIStreamModuleEntity moduleEntity = new APIStreamModuleEntity();
             moduleEntity.setId(moduleId.toString());
-            long totalCallTimes = lastModuleEntity.getTotalCallTimes();
-            moduleEntity.setTotalCallTimes(totalCallTimes+1L);
+            long totalCallTimes = lastModuleEntity.getTotalCallTimes() + 1L;
+            moduleEntity.setTotalCallTimes(totalCallTimes);
             if(lastModuleEntity.getMinRuntime()==0){
                 moduleEntity.setMinRuntime(costTime);
             }else {
