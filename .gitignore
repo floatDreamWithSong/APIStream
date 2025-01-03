@@ -5,6 +5,8 @@ target/
 !**/src/test/**/target/
 logs/
 system/
+docker-compose.yml
+Dockerfile
 ### STS ###
 .apt_generated
 .classpath
