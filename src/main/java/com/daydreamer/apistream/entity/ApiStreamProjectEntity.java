@@ -12,4 +12,5 @@ import java.util.UUID;
 public class ApiStreamProjectEntity {
     @TableId
     private String projectName;
+    private String projectId;
 }

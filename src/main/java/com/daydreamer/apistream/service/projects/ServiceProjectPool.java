@@ -40,9 +40,15 @@ public class ServiceProjectPool {
     public final static ServiceProjectPool instance = new ServiceProjectPool();
     private final static HashMap<String, ServiceProject> projects = new HashMap<>();
 
-    public void createProject(String projectName) {
-        ServiceProject project = new ServiceProject(projectName);
+    public UUID createProject(String projectName) {
+        if (projects.containsKey(projectName)) {
+            log.warn("project already exist");
+            return null;
+        }
+        UUID projectId = UUID.randomUUID();
+        ServiceProject project = new ServiceProject(projectName, projectId);
         projects.put(projectName, project);
+        return projectId;
     }
 
     public void removeProject(String projectName) {
@@ -71,8 +77,10 @@ public class ServiceProjectPool {
         moduleEntity.setMaxRuntime(0);
         moduleEntity.setMinRuntime(0);
         moduleEntity.setTotalCallTimes(0);
+        ServiceProject project = projects.get(projectName);
+        moduleEntity.setProjectId(project.getProjectId().toString());
         apiStreamModuleMapper.insert(moduleEntity);
-        projects.get(projectName).createModule(json, uuid);
+        project.createModule(json, uuid);
         return uuid;
     }
     public void reCoverModule(AddModuleServiceSDKJsonEntity json, UUID uuid, Boolean isDisabled) {
@@ -168,6 +176,9 @@ public class ServiceProjectPool {
 
     public boolean hasProject(String projectName) {
         return projects.containsKey(projectName);
+    }
+    public UUID getProjectId(String projectName) {
+        return projects.get(projectName).getProjectId();
     }
 
 }

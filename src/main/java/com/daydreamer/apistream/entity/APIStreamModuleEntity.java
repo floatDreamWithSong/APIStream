@@ -14,4 +14,5 @@ public class APIStreamModuleEntity {
     private long avgRuntime;
     private long maxRuntime;
     private long minRuntime;
+    private String projectId;
 }

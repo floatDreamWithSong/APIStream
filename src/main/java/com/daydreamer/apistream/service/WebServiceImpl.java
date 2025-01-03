@@ -1,16 +1,19 @@
 package com.daydreamer.apistream.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.daydreamer.apistream.controller.interfaces.WebService;
 import com.daydreamer.apistream.common.dto.response.UniResponse;
 import com.daydreamer.apistream.entity.APIStreamModuleEntity;
 import com.daydreamer.apistream.entity.ApiStreamProjectEntity;
 import com.daydreamer.apistream.mapper.APIStreamModuleMapper;
 import com.daydreamer.apistream.mapper.ApiStreamProjectMapper;
+import com.daydreamer.apistream.service.projects.ServiceProject;
 import com.daydreamer.apistream.service.projects.ServiceProjectPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class WebServiceImpl implements WebService {
@@ -30,8 +33,11 @@ public class WebServiceImpl implements WebService {
     }
 
     @Override
-    public UniResponse<List<APIStreamModuleEntity>> queryModule(String projectId) {
-        return new UniResponse<>(0, "query module success", apiStreamModuleMapper.selectList(null));
+    public UniResponse<List<APIStreamModuleEntity>> queryModule(String projectName) {
+        QueryWrapper<APIStreamModuleEntity> queryWrapper = new QueryWrapper<>();
+        UUID project_id = ServiceProjectPool.instance.getProjectId(projectName);
+        queryWrapper.eq("project_id", project_id.toString());
+        return new UniResponse<>(0, "query module success", apiStreamModuleMapper.selectList(queryWrapper));
     }
 
     @Override

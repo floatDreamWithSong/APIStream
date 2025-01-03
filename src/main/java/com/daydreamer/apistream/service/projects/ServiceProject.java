@@ -17,11 +17,14 @@ import java.util.UUID;
 public class ServiceProject {
     @Getter
     private final String projectName;
+    @Getter
+    private final UUID projectId;
     public HashMap<String, ServiceModule> modules = new HashMap<>();
     public HashMap<String, UUID> disabledModules = new HashMap<>();
 
-    public ServiceProject(String projectName) {
+    public ServiceProject(String projectName, UUID projectId) {
         this.projectName = projectName;
+        this.projectId = projectId;
     }
 
     public boolean hasService(String modulePath, String fnName){

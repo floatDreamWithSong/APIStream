@@ -46,9 +46,10 @@ public class SDKServiceImpl implements SDKService {
 
     @Override
     public UniResponse createProject(String projectName) {
-        ServiceProjectPool.instance.createProject(projectName);
+        UUID projectId = ServiceProjectPool.instance.createProject(projectName);
         ApiStreamProjectEntity apiStreamProjectEntity = new ApiStreamProjectEntity();
         apiStreamProjectEntity.setProjectName(projectName);
+        apiStreamProjectEntity.setProjectId(projectId.toString());
         apiStreamProjectMapper.insert(apiStreamProjectEntity);
         log.info("create project success : {}", projectName);
         return new UniResponse<>(0, "project created");
