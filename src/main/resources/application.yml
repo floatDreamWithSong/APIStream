@@ -11,6 +11,10 @@ spring:
     url: jdbc:mysql://localhost:3306/apistream_database
     username: root
     password: "@Dhj114514"
+  sql:
+    init:
+      schema-locations: classpath:db/schema.sql
+      mode: always
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
