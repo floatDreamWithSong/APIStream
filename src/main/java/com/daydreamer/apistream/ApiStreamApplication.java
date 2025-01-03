@@ -43,7 +43,7 @@ public class ApiStreamApplication {
         SpringApplication.run(ApiStreamApplication.class, args);
         List<ApiStreamProjectEntity> projects = apiStreamProjectMapper.selectList(null);
         for(ApiStreamProjectEntity project : projects) {
-            ServiceProjectPool.instance.createProject(project.getProjectName());
+            ServiceProjectPool.instance.createProject(project.getProjectName(),project.getProjectId());
             log.debug("recreate project: {}", project.getProjectName());
         }
         List<APIStreamModuleEntity> modules = apiStreamModuleMapper.selectList(null);

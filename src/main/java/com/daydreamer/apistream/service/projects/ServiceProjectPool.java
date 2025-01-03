@@ -51,6 +51,15 @@ public class ServiceProjectPool {
         return projectId;
     }
 
+    public void createProject(String projectName, String projectId) {
+        if (projects.containsKey(projectName)) {
+            log.warn("project already exist");
+            return;
+        }
+        ServiceProject project = new ServiceProject(projectName, UUID.fromString(projectId));
+        projects.put(projectName, project);
+    }
+
     public void removeProject(String projectName) {
         if (projects.containsKey(projectName)) {
             ServiceProject project = projects.get(projectName);

@@ -55,6 +55,14 @@ public class SDKServiceImpl implements SDKService {
         return new UniResponse<>(0, "project created");
     }
 
+    public void createProject(String projectName, String projectId) {
+        ServiceProjectPool.instance.createProject(projectName, projectId);
+        ApiStreamProjectEntity apiStreamProjectEntity = new ApiStreamProjectEntity();
+        apiStreamProjectEntity.setProjectName(projectName);
+        apiStreamProjectEntity.setProjectId(projectId);
+        apiStreamProjectMapper.insert(apiStreamProjectEntity);
+    }
+
     @Override
     public UniResponse removeProject(String projectName) {
         if(!ServiceProjectPool.instance.hasProject(projectName)){
