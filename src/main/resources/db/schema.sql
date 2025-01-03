@@ -26,6 +26,7 @@ CREATE TABLE if not exists `apistream-module-data` (
                                                        `max_runtime` BIGINT DEFAULT 0, -- 最大运行时间，使用 INT 类型
                                                        `min_runtime` BIGINT DEFAULT 0, -- 最小运行时间，使用 INT 类型
                                                        `project_id` CHAR(36) NOT NULL,
+                                                       `module_path` VARCHAR(255) NOT NULL, -- 假设模块名称最大长度为 255 个字符
                                                        PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE if not exists `api_stream_projects` (

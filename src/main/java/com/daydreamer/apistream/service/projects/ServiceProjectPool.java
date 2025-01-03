@@ -86,6 +86,7 @@ public class ServiceProjectPool {
         moduleEntity.setMaxRuntime(0);
         moduleEntity.setMinRuntime(0);
         moduleEntity.setTotalCallTimes(0);
+        moduleEntity.setModulePath(ModulePath.resolvePath(json.path).modulePath);
         ServiceProject project = projects.get(projectName);
         moduleEntity.setProjectId(project.getProjectId().toString());
         apiStreamModuleMapper.insert(moduleEntity);
