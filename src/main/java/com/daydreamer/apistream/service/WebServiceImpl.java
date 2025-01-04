@@ -7,8 +7,6 @@ import com.daydreamer.apistream.entity.APIStreamModuleEntity;
 import com.daydreamer.apistream.entity.ApiStreamProjectEntity;
 import com.daydreamer.apistream.mapper.APIStreamModuleMapper;
 import com.daydreamer.apistream.mapper.ApiStreamProjectMapper;
-import com.daydreamer.apistream.service.projects.ServiceProject;
-import com.daydreamer.apistream.service.projects.ServiceProjectPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +16,15 @@ import java.util.UUID;
 @Service
 public class WebServiceImpl implements WebService {
 
-    private ApiStreamProjectMapper apiStreamProjectMapper;
-    private APIStreamModuleMapper apiStreamModuleMapper;
+    private final ApiStreamProjectMapper apiStreamProjectMapper;
+    private final APIStreamModuleMapper apiStreamModuleMapper;
+    private final ServiceProjectPool serviceProjectPool;
 
     @Autowired
-    public WebServiceImpl(ApiStreamProjectMapper apiStreamProjectMapper, APIStreamModuleMapper apiStreamModuleMapper) {
+    public WebServiceImpl(ApiStreamProjectMapper apiStreamProjectMapper, APIStreamModuleMapper apiStreamModuleMapper, ServiceProjectPool serviceProjectPool) {
         this.apiStreamProjectMapper = apiStreamProjectMapper;
         this.apiStreamModuleMapper = apiStreamModuleMapper;
+        this.serviceProjectPool = serviceProjectPool;
     }
 
     @Override
@@ -35,14 +35,14 @@ public class WebServiceImpl implements WebService {
     @Override
     public UniResponse<List<APIStreamModuleEntity>> queryModule(String projectName) {
         QueryWrapper<APIStreamModuleEntity> queryWrapper = new QueryWrapper<>();
-        UUID project_id = ServiceProjectPool.instance.getProjectId(projectName);
+        UUID project_id = serviceProjectPool.getProjectId(projectName);
         queryWrapper.eq("project_id", project_id.toString());
         return new UniResponse<>(0, "query module success", apiStreamModuleMapper.selectList(queryWrapper));
     }
 
     @Override
     public UniResponse<Boolean> disableModule(String modulePath, String projectName) {
-        if(!ServiceProjectPool.instance.disableModule(modulePath, projectName)){
+        if(!serviceProjectPool.disableModule(modulePath, projectName)){
             return new UniResponse<>(1, "disable module failed", false);
         }
         return new UniResponse<>(0, "disable module success", true);
@@ -50,7 +50,7 @@ public class WebServiceImpl implements WebService {
 
     @Override
     public UniResponse<Boolean> enableModule(String modulePath, String projectName) {
-        if(!ServiceProjectPool.instance.enableModule(modulePath, projectName)){
+        if(!serviceProjectPool.enableModule(modulePath, projectName)){
             return new UniResponse<>(1, "enable module failed", false);
         }
         return new UniResponse<>(0, "enable module success", true);

@@ -6,9 +6,7 @@ import com.daydreamer.apistream.controller.interfaces.SDKService;
 import com.daydreamer.apistream.common.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
 import com.daydreamer.apistream.common.dto.response.UniResponse;
 import com.daydreamer.apistream.entity.ApiStreamProjectEntity;
-import com.daydreamer.apistream.mapper.APIStreamModuleMapper;
 import com.daydreamer.apistream.mapper.ApiStreamProjectMapper;
-import com.daydreamer.apistream.service.projects.ServiceProjectPool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,40 +21,40 @@ import static com.daydreamer.apistream.common.ModulePath.resolvePath;
 public class SDKServiceImpl implements SDKService {
 
     private final ApiStreamProjectMapper apiStreamProjectMapper;
-    private final APIStreamModuleMapper apiStreamModuleMapper;
+    private final ServiceProjectPool serviceProjectPool;
     @Autowired
-    public SDKServiceImpl(ApiStreamProjectMapper apiStreamProjectMapper, APIStreamModuleMapper apiStreamModuleMapper) {
+    public SDKServiceImpl(ApiStreamProjectMapper apiStreamProjectMapper, ServiceProjectPool serviceProjectPool) {
         this.apiStreamProjectMapper = apiStreamProjectMapper;
-        this.apiStreamModuleMapper = apiStreamModuleMapper;
+        this.serviceProjectPool = serviceProjectPool;
     }
 
     @Override
-    public UniResponse addModule(AddModuleServiceSDKJsonEntity json) {
+    public UniResponse<Boolean> addModule(AddModuleServiceSDKJsonEntity json) {
         ResolvedPath _path = resolvePath(json.path);
-        if(!ServiceProjectPool.instance.hasProject(_path.projectName)){
+        if(!serviceProjectPool.hasProject(_path.projectName)){
             String msg = "project not exist : "+json.path;
             log.error(msg);
-            return new UniResponse<>(1, msg);
+            return new UniResponse<>(1, msg, false);
         }
-        UUID id = ServiceProjectPool.instance.insertModule(_path.projectName, json);
+        serviceProjectPool.insertModule(_path.projectName, json);
         String msg = "deploy module success : "+json.path;
         log.info(msg);
-        return new UniResponse<>(0, msg);
+        return new UniResponse<>(0, msg, true);
     }
 
     @Override
-    public UniResponse createProject(String projectName) {
-        UUID projectId = ServiceProjectPool.instance.createProject(projectName);
+    public UniResponse<Boolean> createProject(String projectName) {
+        UUID projectId = serviceProjectPool.createProject(projectName);
         ApiStreamProjectEntity apiStreamProjectEntity = new ApiStreamProjectEntity();
         apiStreamProjectEntity.setProjectName(projectName);
         apiStreamProjectEntity.setProjectId(projectId.toString());
         apiStreamProjectMapper.insert(apiStreamProjectEntity);
         log.info("create project success : {}", projectName);
-        return new UniResponse<>(0, "project created");
+        return new UniResponse<>(0, "project created", true);
     }
 
     public void createProject(String projectName, String projectId) {
-        ServiceProjectPool.instance.createProject(projectName, projectId);
+        serviceProjectPool.createProject(projectName, projectId);
         ApiStreamProjectEntity apiStreamProjectEntity = new ApiStreamProjectEntity();
         apiStreamProjectEntity.setProjectName(projectName);
         apiStreamProjectEntity.setProjectId(projectId);
@@ -64,14 +62,18 @@ public class SDKServiceImpl implements SDKService {
     }
 
     @Override
-    public UniResponse removeProject(String projectName) {
-        if(!ServiceProjectPool.instance.hasProject(projectName)){
+    public UniResponse<Boolean> removeProject(String projectName) {
+        if(!serviceProjectPool.hasProject(projectName)){
             return new UniResponse<>(1, "project not exist", false);
         }
-        ServiceProjectPool.instance.removeProject(projectName);
+        serviceProjectPool.removeProject(projectName);
         File file = new File("logs/"+projectName);
         if (file.exists()) {
-            file.delete();
+            if(!file.delete())
+            {
+                log.error("delete file error : {}", projectName);
+                return new UniResponse<>(1, "delete file error", false);
+            }
         }
         if(ModulePath.removeLog(projectName)){
             log.debug("remove project success : {}", projectName);
@@ -79,19 +81,19 @@ public class SDKServiceImpl implements SDKService {
         else{
             log.warn("remove project success but remove log failed : {}", projectName);
         }
-        return new UniResponse(0, "project removed", true);
+        return new UniResponse<>(0, "project removed", true);
     }
 
     @Override
-    public UniResponse existProject(String projectName) {
-        if (ServiceProjectPool.instance.hasProject(projectName)) {
-            return new UniResponse<>(0, "project exist");
+    public UniResponse<Boolean> existProject(String projectName) {
+        if (serviceProjectPool.hasProject(projectName)) {
+            return new UniResponse<>(0, "project exist", true);
         }
-        return new UniResponse<>(1, "project not exist");
+        return new UniResponse<>(1, "project not exist", false);
     }
 
     @Override
-    public UniResponse overwriteProject(String projectName) {
+    public UniResponse<Boolean> overwriteProject(String projectName) {
         if (existProject(projectName).code==0){
             removeProject(projectName);
         }

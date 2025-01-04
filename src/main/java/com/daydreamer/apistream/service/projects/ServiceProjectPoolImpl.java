@@ -3,12 +3,14 @@ package com.daydreamer.apistream.service.projects;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.daydreamer.apistream.common.JsonProcessor;
 import com.daydreamer.apistream.common.ModulePath;
+import com.daydreamer.apistream.common.dto.response.ServiceResult;
 import com.daydreamer.apistream.common.modules.ServiceArgument;
 import com.daydreamer.apistream.common.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
 import com.daydreamer.apistream.common.modules.ServiceModule;
 import com.daydreamer.apistream.entity.APIStreamModuleEntity;
 import com.daydreamer.apistream.mapper.APIStreamModuleMapper;
 import com.daydreamer.apistream.mapper.ApiStreamProjectMapper;
+import com.daydreamer.apistream.service.ServiceProjectPool;
 import com.daydreamer.apistream.service.oss.MinioWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,25 +22,24 @@ import java.util.UUID;
 
 @Slf4j
 @Component
-public class ServiceProjectPool {
+public class ServiceProjectPoolImpl implements ServiceProjectPool {
     private static ApiStreamProjectMapper apiStreamProjectMapper;
     private static APIStreamModuleMapper apiStreamModuleMapper;
     private static MinioWorker minioWorker;
     @Autowired
     public void setApiStreamProjectMapper(ApiStreamProjectMapper apiStreamProjectMapper) {
-        ServiceProjectPool.apiStreamProjectMapper = apiStreamProjectMapper;
+        ServiceProjectPoolImpl.apiStreamProjectMapper = apiStreamProjectMapper;
     }
     @Autowired
     public void setApiStreamModuleMapper(APIStreamModuleMapper apiStreamModuleMapper) {
-        ServiceProjectPool.apiStreamModuleMapper = apiStreamModuleMapper;
+        ServiceProjectPoolImpl.apiStreamModuleMapper = apiStreamModuleMapper;
     }
 
     @Autowired
     public void setUploader(MinioWorker minioWorker) {
-        ServiceProjectPool.minioWorker = minioWorker;
+        ServiceProjectPoolImpl.minioWorker = minioWorker;
     }
 
-    public final static ServiceProjectPool instance = new ServiceProjectPool();
     private final static HashMap<String, ServiceProject> projects = new HashMap<>();
 
     public UUID createProject(String projectName) {
@@ -87,6 +88,7 @@ public class ServiceProjectPool {
         moduleEntity.setMaxRuntime(0);
         moduleEntity.setMinRuntime(0);
         moduleEntity.setTotalCallTimes(0);
+        moduleEntity.setErrorCount(0);
         moduleEntity.setModulePath(ModulePath.resolvePath(json.path).modulePath);
         ServiceProject project = projects.get(projectName);
         moduleEntity.setProjectId(project.getProjectId().toString());
@@ -172,7 +174,7 @@ public class ServiceProjectPool {
         return true;
     }
 
-    public String callModule(String projectName, String modulePath, String fnName, ArrayList<ServiceArgument> args) {
+    public ServiceResult callModule(String projectName, String modulePath, String fnName, ArrayList<ServiceArgument> args) {
         return projects.get(projectName).callService(modulePath,fnName,args );
     }
 

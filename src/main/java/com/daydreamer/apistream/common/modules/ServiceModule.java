@@ -32,9 +32,9 @@ public class ServiceModule {
         functions.put(serviceFunction.serviceFunctionName, serviceFunction);
     }
 
-    public String runServiceFunction(String serviceFunctionName, ArrayList<ServiceArgument> serviceFunctionArguments) {
+    public ServiceResult runServiceFunction(String serviceFunctionName, ArrayList<ServiceArgument> serviceFunctionArguments) {
         if (!functions.containsKey(serviceFunctionName))
-            return JsonProcessor.gson.toJson(new ServiceResult());
+            return new ServiceResult();
         ServiceFunction function = functions.get(serviceFunctionName);
         return javascriptContext.callService(function.getCallFunctionCode(serviceFunctionArguments));
     }

@@ -1,8 +1,10 @@
 package com.daydreamer.apistream.common.context;
 
+import com.daydreamer.apistream.common.dto.response.ServiceResult;
+
 public interface JavascriptContext {
 
-    String callService(String evalStatement);
+    ServiceResult callService(String evalStatement);
 
     void setService(Integer MaxConcurrent, String functionCode);
 }

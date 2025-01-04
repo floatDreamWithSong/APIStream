@@ -2,6 +2,7 @@ package com.daydreamer.apistream.service.projects;
 
 import com.daydreamer.apistream.common.ModulePath;
 import com.daydreamer.apistream.common.dto.receive.sdk.AddModuleServiceSDKJsonEntity;
+import com.daydreamer.apistream.common.dto.response.ServiceResult;
 import com.daydreamer.apistream.common.modules.ServiceArgument;
 import com.daydreamer.apistream.common.modules.ServiceFunction;
 import com.daydreamer.apistream.common.modules.ServiceModule;
@@ -68,7 +69,7 @@ public class ServiceProject {
         json.functions.forEach(fn->module.addServiceFunction(new ServiceFunction(fn.name,fn.code,fn.args )));
         this.modules.put(modulePath, module);
     }
-    public String callService(String modulePath, String fnName, ArrayList<ServiceArgument> args){
+    public ServiceResult callService(String modulePath, String fnName, ArrayList<ServiceArgument> args){
         ServiceModule module = this.modules.get(modulePath);
 
         return module.runServiceFunction(fnName, args);

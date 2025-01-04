@@ -69,7 +69,7 @@ public class AspectLog {
         String logContent = createLogContent(request)
                 .append("ExecutionTime: ").append(executionTime).append(" ms\n")
                 .append("FunctionArgs: ").append(functionArgs).append("\n")
-                .append("Result: ").append(result.toString()).append("\n\n").toString();
+                .append("Result: ").append(result!=null ?result.toString():"").append("\n\n").toString();
         
         // 写入日志文件
         writeLog(logFile, logContent);

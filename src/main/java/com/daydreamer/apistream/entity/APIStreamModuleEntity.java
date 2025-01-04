@@ -16,4 +16,5 @@ public class APIStreamModuleEntity {
     private long minRuntime;
     private String projectId;
     private String modulePath;
+    private long errorCount;
 }

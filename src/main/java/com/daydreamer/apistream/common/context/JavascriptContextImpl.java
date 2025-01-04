@@ -21,7 +21,7 @@ public class JavascriptContextImpl implements JavascriptContext {
         setService(MaxConcurrent, functionCode);
     }
     @Override
-    public String callService(String evalStatement) {
+    public ServiceResult callService(String evalStatement) {
         log.debug(evalStatement);
         ServiceResult serviceResult = new ServiceResult();
         JavascriptContextCore core = null;
@@ -48,7 +48,7 @@ public class JavascriptContextImpl implements JavascriptContext {
         String resp = JsonProcessor.gson.toJson(serviceResult);
         if (core!=null)
             availableContext.offer(core);
-        return resp;
+        return serviceResult;
     }
 
     @Override
