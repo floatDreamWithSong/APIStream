@@ -44,7 +44,6 @@ public class UseServiceImpl implements UseService {
             if (moduleId == null) {
                 return null;
             }
-            // 计算调用时间
             long startTime = System.currentTimeMillis();
             ServiceResult serviceResult = serviceProjectPool.callModule(_path.projectName,_path.modulePath,_path.functionName, args);
             if(serviceResult.errorMessage!=null){
@@ -58,24 +57,12 @@ public class UseServiceImpl implements UseService {
             }
             long endTime = System.currentTimeMillis();
             long costTime = endTime - startTime;
-            // 记录调用日志
             APIStreamModuleEntity lastModuleEntity = apiStreamModuleMapper.selectById(moduleId.toString());
-//            APIStreamModuleEntity moduleEntity = new APIStreamModuleEntity();
-//            moduleEntity.setId(moduleId.toString());
             long totalCallTimes = lastModuleEntity.getTotalCallTimes() + 1L;
             long minRuntime = lastModuleEntity.getMinRuntime()!=0?lastModuleEntity.getMinRuntime():costTime;
             long maxRuntime = Math.max(lastModuleEntity.getMaxRuntime(), costTime);
-//            moduleEntity.setTotalCallTimes(totalCallTimes);
-//            if(lastModuleEntity.getMinRuntime()==0){
-//                moduleEntity.setMinRuntime(costTime);
-//            }else {
-//                moduleEntity.setMinRuntime(Math.min(lastModuleEntity.getMinRuntime(),costTime));
-//            }
             long avgRuntime = (lastModuleEntity.getAvgRuntime()*(totalCallTimes-1) + costTime)/totalCallTimes;
-//            moduleEntity.setAvgRuntime(avgRuntime);
-//            moduleEntity.setErrorCount(lastModuleEntity.getErrorCount());
             UpdateWrapper<APIStreamModuleEntity> updateWrapper = new UpdateWrapper<>();
-
             updateWrapper.set("total_call_times", totalCallTimes);
             updateWrapper.set("min_runtime", minRuntime);
             updateWrapper.set("max_runtime",maxRuntime);
