@@ -8,10 +8,12 @@ import com.daydreamer.apistream.common.dto.response.UniResponse;
 import com.daydreamer.apistream.entity.ApiStreamProjectEntity;
 import com.daydreamer.apistream.mapper.ApiStreamProjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 import static com.daydreamer.apistream.common.ModulePath.resolvePath;
@@ -68,11 +70,13 @@ public class SDKServiceImpl implements SDKService {
         }
         serviceProjectPool.removeProject(projectName);
         File file = new File("logs/"+projectName);
-        if (file.exists()) {
-            if(!file.delete())
-            {
-                log.error("delete file error : {}", projectName);
-                return new UniResponse<>(1, "delete file error", false);
+        if (file.exists()&&file.isDirectory()) {
+            try {
+                FileUtils.cleanDirectory(file);
+            } catch (IOException e) {
+
+                log.error("delete {} error : {}", projectName, e.getMessage());
+                return new UniResponse<>(1, "delete project error", false);
             }
         }
         if(ModulePath.removeLog(projectName)){
