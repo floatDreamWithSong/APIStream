@@ -8,9 +8,9 @@ spring:
     static-path-pattern: "/APIStreamStaticResources/**"
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/apistream_database
-    username: root
-    password: xxxxxxxx
+    url: ${APISTREAM_DATA_URL:jdbc:mysql://localhost:3306/apistream_database}
+    username: ${APISTREAM_DATA_USER:root}
+    password: ${APISTREAM_DATA_PASSWORD:xxxxxxxx}
   sql:
     init:
       schema-locations: classpath:db/schema.sql
@@ -33,7 +33,7 @@ logging:
       max-history: 7
       clean-history-on-start: true
 minio:
-  access-key: 1rFgaZJgyyrCgWyzsMYy
-  secret-key: mzMiZ5qyVdmsCODPf90As2oHE3Juwrf3eQFOI2i7
-  url: http://127.0.0.1:9000
-  bucket-name: public
+  access-key: ${APISTREAM_ACCESS_KEY:1rFgaZJgyyrCgWyzsMYy}
+  secret-key: ${APISTREAM_SECRET_KEY:mzMiZ5qyVdmsCODPf90As2oHE3Juwrf3eQFOI2i7}
+  url: ${APISTREAM_MINIO_URL:http://127.0.0.1:9000}
+  bucket-name: ${APISTREAM_BUCKET_NAME:public}

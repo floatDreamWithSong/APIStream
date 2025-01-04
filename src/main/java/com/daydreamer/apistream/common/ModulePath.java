@@ -31,7 +31,6 @@ public class ModulePath {
     }
 
     public static ResolvedPath resolvePath(String path){
-        System.out.println(path);
         String modulePath;
         String functionName;
         String projectName = path.substring(1, path.indexOf("/",1));
