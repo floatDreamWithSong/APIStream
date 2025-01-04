@@ -8,7 +8,7 @@ spring:
     static-path-pattern: "/APIStreamStaticResources/**"
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/
+    url: jdbc:mysql://localhost:3306/apistream_database
     username: root
     password: "@Dhj114514"
   sql:
