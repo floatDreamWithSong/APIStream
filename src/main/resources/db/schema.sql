@@ -1,8 +1,3 @@
-# DROP TABLE IF EXISTS `apistream-module-data`;
-# DROP TABLE IF EXISTS `api_stream_projects`;
-
-create database if not exists `apistream_database`;
-use `apistream_database`;
 CREATE TABLE if not exists `apistream-module-data` (
                                                        `id` CHAR(36) NOT NULL, -- UUID 通常以 36 个字符（包括 4 个短横线）的字符串形式存储
                                                        `is_disabled` TINYINT(1) DEFAULT 0, -- 布尔值在 MySQL 中可以用 TINYINT(1) 表示

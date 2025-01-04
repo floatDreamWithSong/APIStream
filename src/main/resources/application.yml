@@ -10,7 +10,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/apistream_database
     username: root
-    password: "@Dhj114514"
+    password: xxxxxxxx
   sql:
     init:
       schema-locations: classpath:db/schema.sql
@@ -24,7 +24,7 @@ mybatis-plus:
 logging:
   level:
     com:
-      daydreamer: debug
+      daydreamer: off
   file:
     path: "system/logs"
   logback:
