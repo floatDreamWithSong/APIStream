@@ -18,7 +18,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+@EnableTransactionManagement
 @Slf4j
 @SpringBootApplication
 @MapperScan("com.daydreamer.apistream.mapper")

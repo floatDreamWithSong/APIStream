@@ -8,6 +8,7 @@ import com.daydreamer.apistream.controller.interfaces.UseService;
 import com.daydreamer.apistream.common.modules.ServiceArgument;
 import com.daydreamer.apistream.entity.APIStreamModuleEntity;
 import com.daydreamer.apistream.mapper.APIStreamModuleMapper;
+import com.daydreamer.apistream.service.projects.UseServiceWriter;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -22,12 +23,11 @@ import java.util.UUID;
 @Service
 public class UseServiceImpl implements UseService {
 
-    private final APIStreamModuleMapper apiStreamModuleMapper;
+
     private final ServiceProjectPool serviceProjectPool;
 
     @Autowired
-    public UseServiceImpl(APIStreamModuleMapper apiStreamModuleMapper, ServiceProjectPool serviceProjectPool) {
-        this.apiStreamModuleMapper = apiStreamModuleMapper;
+    public UseServiceImpl(ServiceProjectPool serviceProjectPool) {
         this.serviceProjectPool = serviceProjectPool;
     }
 
@@ -48,31 +48,17 @@ public class UseServiceImpl implements UseService {
             ServiceResult serviceResult = serviceProjectPool.callModule(_path.projectName,_path.modulePath,_path.functionName, args);
             if(serviceResult.errorMessage!=null){
                 log.debug("调用模块:{} 函数:{} 失败:{}",_path.modulePath,_path.functionName,serviceResult.errorMessage);
-                UpdateWrapper<APIStreamModuleEntity> updateWrapper = new UpdateWrapper<>();
-                updateWrapper.setSql("error_count = error_count + 1");
-                updateWrapper.setSql("total_call_times = total_call_times + 1");
-                updateWrapper.eq("id", moduleId.toString());
-                apiStreamModuleMapper.update(updateWrapper);
+                UseServiceWriter.submit(moduleId,-1);
                 return serviceResult.toString();
             }
             long endTime = System.currentTimeMillis();
             long costTime = endTime - startTime;
-            APIStreamModuleEntity lastModuleEntity = apiStreamModuleMapper.selectById(moduleId.toString());
-            long totalCallTimes = lastModuleEntity.getTotalCallTimes() + 1L;
-            long minRuntime = lastModuleEntity.getMinRuntime()!=0?lastModuleEntity.getMinRuntime():costTime;
-            long maxRuntime = Math.max(lastModuleEntity.getMaxRuntime(), costTime);
-            long avgRuntime = (lastModuleEntity.getAvgRuntime()*(totalCallTimes-1) + costTime)/totalCallTimes;
-            UpdateWrapper<APIStreamModuleEntity> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.set("total_call_times", totalCallTimes);
-            updateWrapper.set("min_runtime", minRuntime);
-            updateWrapper.set("max_runtime",maxRuntime);
-            updateWrapper.set("avg_runtime",avgRuntime);
-            log.debug("调用模块:{} 函数:{} 耗时:{}ms",_path.modulePath,_path.functionName,costTime);
-            log.debug("总调用次数:{} 平均耗时:{}ms 最小耗时:{}ms 最大耗时:{}ms",totalCallTimes,avgRuntime,minRuntime,maxRuntime);
-            updateWrapper.eq("id", moduleId.toString());
-            apiStreamModuleMapper.update(updateWrapper);
+            UseServiceWriter.submit(moduleId,costTime);
+//            log.debug("调用模块:{} 函数:{} 耗时:{}ms",_path.modulePath,_path.functionName,costTime);
             return serviceResult.toString();
         }
         return null;
     }
+
+
 }
